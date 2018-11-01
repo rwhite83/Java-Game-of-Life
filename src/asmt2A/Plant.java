@@ -30,7 +30,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * method which responds to turn and initiates a spawn function
 	 */
 	public void live() {
-		System.out.print("plant");
+		//System.out.print("plant");
 		spawn();
 	}
 	

@@ -49,7 +49,7 @@ public class Herbivore extends LifeForm {
 	 * temporary for testing calls Herbivore specific move method
 	 */
 	public void live() {
-		System.out.print("herbivore");
+		//System.out.print("herbivore");
 		move();
 	}
 
@@ -76,11 +76,11 @@ public class Herbivore extends LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean isNotNullCheck(Vec2d vect) {
-		boolean isNotNull = false;
+	public boolean isNullCheck(Vec2d vect) {
+		boolean isNull = false;
 		if (World.cell[(int) vect.x][(int) vect.y] == null)
-			isNotNull = true;
-		return isNotNull;
+			isNull = true;
+		return isNull;
 	}
 
 	/**
@@ -121,22 +121,32 @@ public class Herbivore extends LifeForm {
 	Vec2d[] moves = new Vec2d[] {UpLeft, Up, UpRight, Left, Right, DownLeft, Down, DownRight};
 
 	public void move() {
-		int n = rand.nextInt(8);
+		int n = rand.nextInt(7);
 		Vec2d temp = moves[n];
 		Vec2d newHerbivoreVect = new Vec2d(herbivoreVert + (int) temp.x, herbivoreHori + (int) temp.y);
 		if (inBoundsCheck(newHerbivoreVect))
-			if ((isEdibleCheck(newHerbivoreVect)) || isNotNullCheck(newHerbivoreVect)) {
+			if ((isEdibleCheck(newHerbivoreVect)) || isNullCheck(newHerbivoreVect)) {
 				if (isEdibleCheck(newHerbivoreVect))
 					lastFeed = 0;
 				else
 					lastFeed++;
 				World.cell[herbivoreVert][herbivoreHori].colour = Colour.SIENNA;
+
 				World.cell[(int) newHerbivoreVect.x][(int) newHerbivoreVect.y].colour = Colour.YELLOW;
 				World.cell[(int) newHerbivoreVect.x][(int) newHerbivoreVect.y].life = World.cell[herbivoreVert][herbivoreHori].life;
 				World.cell[herbivoreVert][herbivoreHori].life = null;
 				herbivoreVert += (int) newHerbivoreVect.x;
 				herbivoreHori += (int) newHerbivoreVect.y;
 			}
+			try {
+				
+			}
+				catch (NullPointerException npe) {
+					System.out.println(herbivoreVert + " " + herbivoreHori);
+					System.out.println(temp);
+					System.out.println(newHerbivoreVect);	
+					System.out.println("hi");
+				}
 			if (lastFeed >= 5)
 				die();
 	}

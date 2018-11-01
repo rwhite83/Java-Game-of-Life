@@ -63,7 +63,7 @@ public class Main extends Application {
                 buttons[i][j].setOnAction(this::processButtonPress);
             }
         }
-		root.setMinSize(10,10);
+		root.setMinSize(1,1);
 		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.setTitle("Game of Life");

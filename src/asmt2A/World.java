@@ -47,8 +47,11 @@ public class World {
 
 		public LifeForm life;
 
-		Cell(LifeForm life) {
+		Cell(int x, int y, LifeForm life, Colour cellColour) {
 			this.life = life;
+			horiPosi = x;
+			vertPosi = y;
+			colour = cellColour;
 		}
 
 		/** various getters and setters */
@@ -88,21 +91,16 @@ public class World {
 		int i, j, n;
 		for (i = 0; i < worldVert; i++) {
 			for (j = 0; j < worldHori; j++) {
-				n = rand.nextInt(3);
-				if (n == 0) {
-					cell[i][j] = new Cell(new Plant(i, j));
-					cell[i][j].setCellvertPosi(i);
-					cell[i][j].setCellColour(Colour.GREEN);
+				n = RandomGenerator.nextNumber(99);
+				if (n >= 85) {
+					cell[i][j] = new Cell(i, j, new Herbivore(i, j), Colour.YELLOW);
 				}
-				else if (n == 1) {
-					cell[i][j] = new Cell(new Herbivore(i, j));
-					cell[i][j].setCellvertPosi(i);
-					cell[i][j].setCellhoriPosi(j);
-					cell[i][j].setCellColour(Colour.YELLOW);
+				else if (n >= 65) {
+					cell[i][j] = new Cell(i, j, new Plant(i, j), Colour.GREEN);
+					
 				}
 				else {
-					cell[i][j] = new Cell(null);
-					cell[i][j].setCellColour(Colour.SIENNA);
+					cell[i][j] = new Cell(i, j, null, Colour.SIENNA);
 				}
 			}
 		}
