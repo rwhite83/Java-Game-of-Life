@@ -59,6 +59,7 @@ public class Main extends Application {
             {
             	buttons[i][j] = new Button();
                 root.add(buttons[i][j], i, j);
+                //buttons[i][j].setPrefSize(1, 1);
                 colorize(buttons[i][j], i, j);
                 buttons[i][j].setOnAction(this::processButtonPress);
             }

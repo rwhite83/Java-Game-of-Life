@@ -7,6 +7,35 @@ import com.sun.javafx.geom.Vec2d;
 /** extends lifeForm and implements relevant methods */
 
 public class Herbivore extends LifeForm {
+	
+	
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * Note to me:
+	 * 
+	 * have to fix the is edible function
+	 * 
+	 * 
+	 *  
+	 *  have to create the flag to not check things that have already moved
+	 *  
+	 *  
+	 *  
+	 *  
+	 *  plants are not what you thought
+	 *  
+	 *   
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 
 	/**
 	 * this particular herbivore's vertical and horizontal, as well as a counter for
@@ -96,6 +125,16 @@ public class Herbivore extends LifeForm {
 			isEdible = true;
 		return isEdible;
 	}
+	
+	public boolean viablePosition(Vec2d vect) {
+		
+		boolean clearToMove = false;
+		boolean herbivoreEdible = isEdibleCheck(vect);
+		boolean isNull = isNullCheck(vect);
+		if (herbivoreEdible || isNull)
+				clearToMove = true;
+		return clearToMove;
+	}
 
 	/**
 	 * destroys the animal by making it's own cell null
@@ -109,7 +148,7 @@ public class Herbivore extends LifeForm {
 	 * vector directions to associate with adjacent
 	 * cells and operate on
 	 */
-	Vec2d UpLeft = new Vec2d(-1, 1);
+	Vec2d UpLeft = new Vec2d(-1, 15);
 	Vec2d Up = new Vec2d(0, 1);
 	Vec2d UpRight = new Vec2d(1, 1);
 	Vec2d Left = new Vec2d(-1, 0);
@@ -121,24 +160,32 @@ public class Herbivore extends LifeForm {
 	Vec2d[] moves = new Vec2d[] {UpLeft, Up, UpRight, Left, Right, DownLeft, Down, DownRight};
 
 	public void move() {
+		//if (lastFeed == 5)
+			//die();
 		int n = rand.nextInt(7);
 		Vec2d temp = moves[n];
 		Vec2d newHerbivoreVect = new Vec2d(herbivoreVert + (int) temp.x, herbivoreHori + (int) temp.y);
-		if (inBoundsCheck(newHerbivoreVect))
-			if ((isEdibleCheck(newHerbivoreVect)) || isNullCheck(newHerbivoreVect)) {
-				if (isEdibleCheck(newHerbivoreVect))
-					lastFeed = 0;
-				else
-					lastFeed++;
+		if (inBoundsCheck(newHerbivoreVect)) {
+			if (isNullCheck(newHerbivoreVect)) {
 				World.cell[herbivoreVert][herbivoreHori].colour = Colour.SIENNA;
-
 				World.cell[(int) newHerbivoreVect.x][(int) newHerbivoreVect.y].colour = Colour.YELLOW;
 				World.cell[(int) newHerbivoreVect.x][(int) newHerbivoreVect.y].life = World.cell[herbivoreVert][herbivoreHori].life;
 				World.cell[herbivoreVert][herbivoreHori].life = null;
 				herbivoreVert += (int) newHerbivoreVect.x;
 				herbivoreHori += (int) newHerbivoreVect.y;
+				lastFeed++;
 			}
-			try {
+			if (isEdibleCheck(newHerbivoreVect)) {
+				World.cell[herbivoreVert][herbivoreHori].colour = Colour.SIENNA;
+				World.cell[(int) newHerbivoreVect.x][(int) newHerbivoreVect.y].colour = Colour.YELLOW;
+				World.cell[(int) newHerbivoreVect.x][(int) newHerbivoreVect.y].life = World.cell[herbivoreVert][herbivoreHori].life;
+				World.cell[herbivoreVert][herbivoreHori].life = null;
+				herbivoreVert += (int) newHerbivoreVect.x;
+				herbivoreHori += (int) newHerbivoreVect.y;
+				lastFeed = 0;
+			}
+		}
+			/*try {
 				
 			}
 				catch (NullPointerException npe) {
@@ -148,6 +195,6 @@ public class Herbivore extends LifeForm {
 					System.out.println("hi");
 				}
 			if (lastFeed >= 5)
-				die();
+				die();*/
 	}
 }

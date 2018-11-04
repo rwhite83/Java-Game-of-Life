@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 
 public class Game {
 	
-	World world = new World(60, 60);
+	World world = new World(20, 20);
 	
 	/** methods to start a new game and process a turn for a world 
 	 * created in Main */
@@ -20,7 +20,7 @@ public class Game {
 				Main.colorize(Main.buttons[i][j], i, j);
 			}
 		}
-		System.out.println();
+		//System.out.println();
 	}
 	
 }
