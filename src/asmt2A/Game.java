@@ -16,11 +16,11 @@ public class Game {
 	public void turn() {
 		world.worldTurn();
 		for(int i = 0; i < World.worldVert; i++) {
-			for (int j = 0; j < World.worldHori; j++) {
+			for (int j = 0; j < World.worldHori; j++) 
 				Main.colorize(Main.buttons[i][j], i, j);
-			}
 		}
-		//System.out.println();
 	}
+	
+	
 	
 }

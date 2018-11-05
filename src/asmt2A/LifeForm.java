@@ -22,4 +22,11 @@ public abstract class LifeForm {
 	public void die() {
 		
 	}
+	
+	public void setMoved(boolean x) {
+	}
+	
+	public boolean getMoved() {
+		return false;
+	}
 }
