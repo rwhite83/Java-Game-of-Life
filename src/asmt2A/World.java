@@ -114,7 +114,7 @@ public class World {
 		int i, j;
 		for (i = 0; i < worldVert; i++) {
 			for (j = 0; j < worldHori; j++) {
-				if ((cell[i][j].life != null) && ((cell[i][j].life.getMoved()))) 
+				if ((cell[i][j].life != null) && (!(cell[i][j].life.getMoved()))) 
 					cell[i][j].life.live();
 			}
 		}
