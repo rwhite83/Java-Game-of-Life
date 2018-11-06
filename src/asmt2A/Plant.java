@@ -12,8 +12,8 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	private int plantVert;
 	private int plantHori;
 	
-	private int nullNeighbors;
-	private int plantNeighbors;
+	private int nullNeighbors = 1;
+	private int plantNeighbors = 1;
 	
 	Vec2d[] fertile = new Vec2d[7];;
 	
@@ -35,10 +35,12 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * if it is, and checks if the cell is null and increments if it is
 	 */
 	public void neighborCheck() {
+		int checkTempVert, checkTempHori;
 		for (int i = 0,j = 0; i < moves.length; i++) {
-			int checkTempVert = (int) moves[i].x + plantVert;
-			int checkTempHori = (int) moves[i].y + plantHori;
-			if (checkTempVert < World.worldVert && checkTempHori < World.worldHori) {
+			if (((((int) moves[i].x + plantVert) < World.worldVert) && (((int) moves[i].y + plantHori) < World.worldHori)) 
+				&& (((int) moves[i].x + plantVert) > 0) && (((int) moves[i].y + plantHori) > 0)) {
+				checkTempVert = (int) moves[i].x + plantVert;
+				checkTempHori = (int) moves[i].y + plantHori;
 				if (World.cell[checkTempVert][checkTempHori].life instanceof HerbivoreEdible)
 					plantNeighbors++;
 				if (World.cell[checkTempHori][checkTempHori] == null) {
@@ -53,11 +55,16 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 
 	/**
 	 * first implements neighborCheck, then picks a random number based on
-	 * the number of nullNeighbors.  it then pull 
+	 * the number of nullNeighbors.  it then pull a vector from the fertile array 
+	 * based on the index position of plantNeighbors
+	 * 
+	 * currently runs runs without errors, but does not function,
+	 * but I had to initialize nullNeighbors and plantNeighbors
+	 * to 1 to avoid random potentially searching a zero number 
 	 */
 	public void spawn() {
 		neighborCheck();
-		int n = rand.nextInt(nullNeighbors -1);
+		int n = rand.nextInt(nullNeighbors);
 		Vec2d arrayPull = fertile[n];
 		if (plantNeighbors == 4 && nullNeighbors >= 3) {
 			int spawnTempVert = (int) arrayPull.x;
@@ -70,12 +77,6 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * method which responds to turn and initiates a spawn function
 	 */
 	public void live() {
-		//System.out.print("plant");
 		spawn();
 	}
-	
-	public void die() {
-		// still to be defined
-	}
-
 }
