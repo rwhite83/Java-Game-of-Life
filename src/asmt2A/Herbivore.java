@@ -39,7 +39,8 @@ public class Herbivore extends LifeForm {
 	private int lastFeed;
 	public boolean moved;
 	
-	/** another temporary random number generator */
+	
+	/** a generic random number generator */
 	Random rand = new Random();
 
 	/**
@@ -170,16 +171,6 @@ public class Herbivore extends LifeForm {
 	 * vector directions to associate with adjacent
 	 * cells and operate on
 	 */
-	Vec2d UpLeft = new Vec2d(-1, 15);
-	Vec2d Up = new Vec2d(0, 1);
-	Vec2d UpRight = new Vec2d(1, 1);
-	Vec2d Left = new Vec2d(-1, 0);
-	Vec2d Right = new Vec2d(1, 0);
-	Vec2d DownLeft = new Vec2d(-1, -1);
-	Vec2d Down = new Vec2d(0, -1);
-	Vec2d DownRight = new Vec2d(-1, 1);
-
-	Vec2d[] moves = new Vec2d[] {UpLeft, Up, UpRight, Left, Right, DownLeft, Down, DownRight};
 
 	public void move() {
 		if (lastFeed == 5)
