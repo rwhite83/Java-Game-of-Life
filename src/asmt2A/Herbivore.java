@@ -96,7 +96,7 @@ public class Herbivore extends LifeForm {
 	public boolean inBoundsCheck(Vec2d vect) {
 		boolean inBounds = false;
 		if ((vect.x < World.worldVert && vect.y < World.worldHori)
-			&& (vect.x > 0 && vect.y > 0))
+			&& (vect.x >= 0 && vect.y >= 0))
 			inBounds = true;
 		return inBounds;
 	}
@@ -110,7 +110,7 @@ public class Herbivore extends LifeForm {
 	 */
 	public boolean isNullCheck(Vec2d vect) {
 		boolean isNull = false;
-		if (World.cell[(int) vect.x][(int) vect.y] == null)
+		if (World.cell[(int) vect.x][(int) vect.y].life == null)
 			isNull = true;
 		return isNull;
 	}
@@ -154,9 +154,11 @@ public class Herbivore extends LifeForm {
 		World.cell[(int) vect.x][(int) vect.y].colour = Colour.YELLOW;
 		World.cell[(int) vect.x][(int) vect.y].life = World.cell[herbivoreVert][herbivoreHori].life;
 		World.cell[herbivoreVert][herbivoreHori].life = null;
-		herbivoreVert += (int) vect.x;
-		herbivoreHori += (int) vect.y;
+		herbivoreVert = (int) vect.x;
+		herbivoreHori = (int) vect.y;
 		moved = true;
+		//herbivoreVert = herbivoreVert + (int) vect.x;
+		//herbivoreHori = herbivoreHori + (int) vect.y;
 	}
 
 	/**
@@ -173,8 +175,10 @@ public class Herbivore extends LifeForm {
 	 */
 
 	public void move() {
-		if (lastFeed == 5)
+		if (lastFeed == 5) {
 			die();
+			return;
+		}
 		int n = rand.nextInt(7);
 		Vec2d temp = moves[n];
 		Vec2d newHerbivoreVect = new Vec2d(herbivoreVert + (int) temp.x, herbivoreHori + (int) temp.y);

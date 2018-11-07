@@ -91,6 +91,7 @@ public class World {
 		int i, j, n;
 		for (i = 0; i < worldVert; i++) {
 			for (j = 0; j < worldHori; j++) {
+				//n = RandomGenerator.nextNumber(99);
 				n = RandomGenerator.nextNumber(99);
 				if (n >= 85) {
 					cell[i][j] = new Cell(i, j, new Herbivore(i, j), Colour.YELLOW);
@@ -116,6 +117,12 @@ public class World {
 			for (j = 0; j < worldHori; j++) {
 				if ((cell[i][j].life != null) && (!(cell[i][j].life.getMoved()))) 
 					cell[i][j].life.live();
+			}
+		}
+		for (i = 0; i < worldVert; i++) {
+			for (j = 0; j < worldHori; j++) {
+				if (cell[i][j].life != null)
+					cell[i][j].life.setMoved(false);
 			}
 		}
 	}
