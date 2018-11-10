@@ -89,8 +89,8 @@ public class World {
 	public void createWorld(int vert, int hori) {
 		cell = new Cell[vert][hori];
 		int i, j, n;
-		for (i = 0; i < worldVert; i++) {
-			for (j = 0; j < worldHori; j++) {
+		for (i = 0; i < worldHori; i++) {
+			for (j = 0; j < worldVert; j++) {
 				//n = RandomGenerator.nextNumber(99);
 				n = RandomGenerator.nextNumber(99);
 				if (n >= 85) {
