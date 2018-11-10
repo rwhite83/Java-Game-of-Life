@@ -91,7 +91,6 @@ public class World {
 		int i, j, n;
 		for (i = 0; i < worldHori; i++) {
 			for (j = 0; j < worldVert; j++) {
-				//n = RandomGenerator.nextNumber(99);
 				n = RandomGenerator.nextNumber(99);
 				if (n >= 85) {
 					cell[i][j] = new Cell(i, j, new Herbivore(i, j), Colour.YELLOW);
