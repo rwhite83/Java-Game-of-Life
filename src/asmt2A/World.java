@@ -1,53 +1,66 @@
 package asmt2A;
 
-import java.util.Random;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.control.Button;
 
 public class World {
-	
-	/** 
-	 * worldHori global variable for height of game
-	 * worldVert global variable for width of game
-	 * cell declares a 2D array of cells
+
+	/**
+	 * worldHori global variable for height of game worldVert global variable for
+	 * width of game cell declares a 2D array of cells
 	 */
-	
-	public static int worldHori;
 	public static int worldVert;
-	
-	static Cell[][] cell;
-	
-	/** world constructor
-	 * @param hori passes to worldHori
-	 * @param vert passes to worldVert
-	 * implements createWorld function 
+	public static int worldHori;
+
+	/**
+	 * declares a 2D array or cells
 	 */
-	public World (int vert, int hori) {
-		this.worldHori = hori;
-		this.worldVert = vert;
-		createWorld(worldHori, worldVert);
+	static Cell[][] cell;
+
+	/**
+	 * world constructor
+	 * 
+	 * @param hori passes to worldHori
+	 * @param vert passes to worldVert implements createWorld function
+	 */
+	public World(int x, int y) {
+		World.worldVert = y;
+		World.worldHori = x;
+		createWorld(worldVert, worldHori);
 	}
 
-	/** temporary random number generator in lieu of 
-	 * RandomGenerator class to be provided by prof
-	 */
-	Random rand = new Random();
-	
-	/** inner cell class
-	 * includes vertical and horizontal position in the cell array,
-	 * the colour to be associated with that kind of cell,
-	 * a LifeForm to associate with it (passed in the constructor)
+	/**
+	 * inner cell class includes vertical and horizontal position in the cell array,
+	 * the colour to be associated with that kind of cell, a lifeform to associate
+	 * with it (passed in the constructor)
 	 */
 	public class Cell {
-		
-		public Rectangle border;
+
+		/**
+		 * vertPosi and horiPosi are the dimensions of a particular cell within the 2D
+		 * cell array
+		 */
 		public int vertPosi;
 		public int horiPosi;
-		
+
+		/**
+		 * a colour associated with a cell which is drawn on GUI draw
+		 */
 		public Colour colour;
 
+		/**
+		 * declaration of a lifeform used to associate a lifeform with a cell
+		 */
 		public LifeForm life;
 
-		Cell(int x, int y, LifeForm life, Colour cellColour) {
+		/**
+		 * cell constructor
+		 * 
+		 * @param y          is the vertical variable for a cell
+		 * @param x          is the horizontal variable for a cell
+		 * @param life       the lifeform variable for a cell
+		 * @param cellColour the colour variable for a cell
+		 */
+		Cell(int y, int x, LifeForm life, Colour cellColour) {
 			this.life = life;
 			horiPosi = x;
 			vertPosi = y;
@@ -55,19 +68,19 @@ public class World {
 		}
 
 		/** various getters and setters */
-		
+
 		public void setLifeType(LifeForm life) {
 			this.life = life;
 		}
-		
-		public void setCellvertPosi(int x) {
+
+		public void setCellHoriPosi(int x) {
 			this.vertPosi = x;
 		}
-		
-		public void setCellhoriPosi(int y) {
+
+		public void setCellVertPosi(int y) {
 			this.horiPosi = y;
 		}
-		
+
 		public void setCellColour(Colour colour) {
 			this.colour = colour;
 		}
@@ -78,53 +91,65 @@ public class World {
 		}
 	}
 
-	/** 
-	 * create world method
-	 * instantiates the 2D array and creates a new cell at 
-	 * each position, assigned a lifeType (or null) depending
-	 * on results of a random number generator
+	/**
+	 * create world method instantiates the 2D array and creates a new cell at each
+	 * position, assigned a lifeType (or null) depending on results of a random
+	 * number generator
+	 * 
 	 * @param hori global board horizontal parameter passed in
 	 * @param vert global board vertical parameter passed in
 	 */
 	public void createWorld(int vert, int hori) {
 		cell = new Cell[vert][hori];
-		int i, j, n;
-		for (i = 0; i < worldVert; i++) {
-			for (j = 0; j < worldHori; j++) {
+		int x, y, n;
+		for (y = 0; y < worldVert; y++) {
+			for (x = 0; x < worldHori; x++) {
 				n = RandomGenerator.nextNumber(99);
 				if (n >= 85) {
-					cell[i][j] = new Cell(i, j, new Herbivore(i, j), Colour.YELLOW);
-				}
-				else if (n >= 65) {
-					cell[i][j] = new Cell(i, j, new Plant(i, j), Colour.GREEN);
-					
-				}
-				else {
-					cell[i][j] = new Cell(i, j, null, Colour.SIENNA);
+					cell[y][x] = new Cell(y, x, new Herbivore(y, x), Colour.YELLOW);
+				} else if (n >= 65) {
+					cell[y][x] = new Cell(y, x, new Plant(y, x), Colour.GREEN);
+
+				} else {
+					cell[y][x] = new Cell(y, x, null, Colour.SIENNA);
 				}
 			}
 		}
 	}
 
-	/** 
-	 * the function to initiate all life forms on the board to do a 'live'
-	 *  function implements properly, but the javafx board doesn't update and change 
-	 *  */
+	/**
+	 * the GUI stuff --> creates an array of buttons coloured according to what is
+	 * in the cells of the cell array
+	 */
+	public static void colorize(Button button, int y, int x) {
+		String colourString = World.cell[y][x].getCellColour();
+		Game.buttons[y][x].setStyle("-fx-background-color: " + colourString);
+	}
+
+	/**
+	 * the function to initiate all life forms on the board to do a 'live' function
+	 * implements properly, but the javafx board doesn't update and change. also
+	 * sets all life moved variable to false after a turn, a variable which is set
+	 * to true when a lifeform is created or moves to avoid duplicate moves/spawns
+	 * on a single turn. also recolorizes every cell after a turn
+	 */
 	public void worldTurn() {
-		int i, j;
-		for (i = 0; i < worldVert; i++) {
-			for (j = 0; j < worldHori; j++) {
-				if ((cell[i][j].life != null) && (!(cell[i][j].life.getMoved()))) 
-					cell[i][j].life.live();
+		int x, y;
+		for (y = 0; y < worldVert; y++) {
+			for (x = 0; x < worldHori; x++) {
+				if ((cell[y][x].life != null) && (!(cell[y][x].life.getMoved())))
+					cell[y][x].life.live();
 			}
 		}
+		for (y = 0; y < worldVert; y++) {
+			for (x = 0; x < worldHori; x++) {
+				if (cell[y][x].life != null)
+					cell[y][x].life.setMoved(false);
+			}
+		}
+		for (y = 0; y < World.worldVert; y++) {
+			for (x = 0; x < World.worldHori; x++)
+				colorize(Game.buttons[y][x], y, x);
+		}
 	}
-
-
-
-
-
-
-
-
 }
