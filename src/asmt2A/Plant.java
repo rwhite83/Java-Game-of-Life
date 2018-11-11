@@ -8,7 +8,8 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 
 	/**
 	 * a particular plant's horizontal and vertical, a vector of those variables,
-	 * and a moved boolean to tag if a plant has been instantiated this turn
+	 * and a moved boolean to tag if a plant has been instantiated this turn. also
+	 * including constants for seed function and a colour associated with plants
 	 */
 	private int plantVert;
 	private int plantHori;
@@ -16,9 +17,10 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	public boolean moved;
 	public static final int MINIMUM_NULL = 3;
 	public static final int EXACT_PLANT = 4;
+	public Colour plantColour = Colour.GREEN;
 
 	/**
-	 * a counter for cells with null and plant lifeforms when iterationg thorough
+	 * a counter for cells with null and plant lifeforms when iterating thorough
 	 * neighbouring cells
 	 */
 	private int nullNeighbours;
@@ -49,6 +51,13 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 */
 	public void setMoved(boolean moved) {
 		moved = this.moved;
+	}
+
+	/**
+	 * returns the colour of the plant
+	 */
+	public Colour getColour() {
+		return plantColour;
 	}
 
 	/**
@@ -93,7 +102,6 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 				if (plantNeighbours == EXACT_PLANT && (nullNeighbours >= MINIMUM_NULL)) {
 					World.cell[(int) seedVect2.x][(int) seedVect2.y].life = new Plant((int) seedVect2.x,
 							(int) seedVect2.y);
-					World.cell[(int) seedVect2.x][(int) seedVect2.y].colour = Colour.GREEN;
 					World.cell[(int) seedVect2.x][(int) seedVect2.y].life.setMoved(true);
 				}
 			}
