@@ -27,11 +27,9 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	private int plantNeighbours;
 
 	/**
-	 * two arraylists, one for fertile positions around plant, the other for viable
-	 * positions of those
+	 * an arraylist to check for fertile positions around a particular grid location
 	 */
 	ArrayList<Vec2d> fertile = new ArrayList<Vec2d>();
-	ArrayList<Vec2d> fertileViable = new ArrayList<Vec2d>();
 
 	/**
 	 * standard constructor for Plant
@@ -69,7 +67,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	public void neighborCheck(Vec2d tempVect) {
 		plantNeighbours = 0;
 		nullNeighbours = 0;
-		fertileViable.clear();
+		fertile.clear();
 		for (int i = 0; i < moves.length; i++) {
 			Vec2d currentVect = new Vec2d(plantVect.x + moves[i].x, plantVect.y + moves[i].y);
 			if (currentVect.x < World.worldHori && currentVect.y < World.worldVert && currentVect.x >= 0
@@ -78,7 +76,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 					plantNeighbours++;
 				} else if (World.cell[(int) currentVect.x][(int) currentVect.y].life == null) {
 					nullNeighbours++;
-					fertileViable.add(currentVect);
+					fertile.add(currentVect);
 				}
 			}
 		}
@@ -93,20 +91,20 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 */
 	public void spawn() {
 		neighborCheck(plantVect);
-		if (fertileViable.size() > 0) {
-			int randomPositionInt = RandomGenerator.nextNumber(fertileViable.size());
-			Vec2d seedVect1 = new Vec2d(fertileViable.get(randomPositionInt));
+		if (fertile.size() > 0 && nullNeighbours >= MINIMUM_NULL) {
+			int randomPositionInt = RandomGenerator.nextNumber(fertile.size());
+			Vec2d seedVect1 = new Vec2d(fertile.get(randomPositionInt));
 			neighborCheck(seedVect1);
-			if (fertileViable.size() > 0) {
-				Vec2d seedVect2 = new Vec2d(fertileViable.get(randomPositionInt));
-				if (plantNeighbours == EXACT_PLANT && (nullNeighbours >= MINIMUM_NULL)) {
+			if (fertile.size() > 0) {
+				Vec2d seedVect2 = new Vec2d(fertile.get(randomPositionInt));
+				if (plantNeighbours == EXACT_PLANT) {
 					World.cell[(int) seedVect2.x][(int) seedVect2.y].life = new Plant((int) seedVect2.x,
 							(int) seedVect2.y);
 					World.cell[(int) seedVect2.x][(int) seedVect2.y].life.setMoved(true);
 				}
+
 			}
 		}
-
 	}
 
 	/**
