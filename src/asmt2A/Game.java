@@ -8,11 +8,19 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class Game extends Application {
+	
 
+	/**
+	 * 	Global width and height paramters
+	 *  Global height parameter 
+	 */
+	public static final int GLOBAL_HORI = 80;
+	public static final int GLOBAL_VERT = 30;
+	
 	/**
 	 * creates a world
 	 */
-	static World world = new World(30, 80);
+	static World world = new World(GLOBAL_HORI, GLOBAL_VERT);
 
 	/**
 	 * declares a 2D array of buttons for the world
@@ -52,7 +60,7 @@ public class Game extends Application {
 	 */
 	public static void launchGUI(World GUIworld) {
 		world = GUIworld;
-		buttons = new Button[World.worldVert][World.worldHori];
+		buttons = new Button[World.worldHori][World.worldVert];
 		launch();
 	}
 
@@ -62,12 +70,12 @@ public class Game extends Application {
 	public void start(Stage stage) {
 		root = new GridPane();
 		int x, y;
-		for (y = 0; y < World.worldVert; y++) {
-			for (x = 0; x < World.worldHori; x++) {
-				buttons[y][x] = new Button();
-				root.add(buttons[y][x], y, x);
-				World.colorize(buttons[y][x], y, x);
-				buttons[y][x].setOnAction(this::processButtonPress);
+		for (x = 0; x < World.worldHori; x++) {
+			for (y = 0; y < World.worldVert; y++) {
+				buttons[x][y] = new Button();
+				root.add(buttons[x][y], x, y);
+				World.colorize(buttons[x][y], x, y);
+				buttons[x][y].setOnAction(this::processButtonPress);
 			}
 		}
 		root.setMinSize(1, 1);
