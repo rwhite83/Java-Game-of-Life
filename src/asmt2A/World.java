@@ -63,21 +63,6 @@ public class World {
 			horiPosi = x;
 			vertPosi = y;
 		}
-
-		/** various getters and setters */
-
-		public void setLifeType(LifeForm life) {
-			this.life = life;
-		}
-
-		public void setCellHoriPosi(int x) {
-			this.horiPosi = x;
-		}
-
-		public void setCellVertPosi(int y) {
-			this.vertPosi = y;
-		}
-
 	}
 
 	/**
