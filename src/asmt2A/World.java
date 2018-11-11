@@ -139,14 +139,14 @@ public class World {
 	 */
 	public void worldTurn() {
 		int x, y;
-		for (y = 0; y < worldVert; y++) {
-			for (x = 0; x < worldHori; x++) {
-				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved())))
+		for (x = 0; x < worldHori; x++) {
+			for (y = 0; y < worldVert; y++) {
+				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved()))) 
 					cell[x][y].life.live();
 			}
 		}
-		for (y = 0; y < worldVert; y++) {
-			for (x = 0; x < worldHori; x++) {
+		for (x = 0; x < worldHori; x++) {
+			for (y = 0; y < worldVert; y++) {
 				if (cell[x][y].life != null)
 					cell[x][y].life.setMoved(false);
 			}

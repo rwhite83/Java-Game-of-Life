@@ -44,14 +44,6 @@ public class Herbivore extends LifeForm {
 	}
 
 	/**
-	 * primary live method responding to 'turn' printout to console is only
-	 * temporary for testing calls Herbivore specific move method
-	 */
-	public void live() {
-		move();
-	}
-
-	/**
 	 * getters and setters for the moved boolean
 	 */
 	public boolean getMoved() {
@@ -130,8 +122,8 @@ public class Herbivore extends LifeForm {
 		World.cell[(int) vect.x][(int) vect.y].colour = Colour.YELLOW;
 		World.cell[(int) vect.x][(int) vect.y].life = World.cell[herbivoreHori][herbivoreVert].life;
 		World.cell[herbivoreHori][herbivoreVert].life = null;
-		herbivoreVert = (int) vect.x;
-		herbivoreHori = (int) vect.y;
+		herbivoreHori = (int) vect.x;
+		herbivoreVert = (int) vect.y;
 		moved = true;
 	}
 
@@ -158,7 +150,7 @@ public class Herbivore extends LifeForm {
 		while (moved == false) {
 			int randomPositionInt = RandomGenerator.nextNumber(7);
 			Vec2d temp = moves[randomPositionInt];
-			Vec2d newHerbivoreVect = new Vec2d(herbivoreVert + (int) temp.x, herbivoreHori + (int) temp.y);
+			Vec2d newHerbivoreVect = new Vec2d(herbivoreHori + (int) temp.x, herbivoreVert + (int) temp.y);
 			if (inBoundsCheck(newHerbivoreVect)) {
 				if (isNullCheck(newHerbivoreVect)) {
 					moveSpace(newHerbivoreVect);
@@ -170,5 +162,13 @@ public class Herbivore extends LifeForm {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * primary live method responding to 'turn' printout to console is only
+	 * temporary for testing calls Herbivore specific move method
+	 */
+	public void live() {
+		move();
 	}
 }

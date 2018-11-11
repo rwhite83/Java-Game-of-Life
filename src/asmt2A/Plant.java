@@ -40,7 +40,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	Plant(int x, int y) {
 		this.plantHori = x;
 		this.plantVert = y;
-		plantVect = new Vec2d(plantVert, plantHori);
+		plantVect = new Vec2d(plantHori, plantVert);
 
 	}
 
