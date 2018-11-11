@@ -76,13 +76,13 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 					&& currentVect.y >= 0) {
 				if (World.cell[(int) currentVect.x][(int) currentVect.y].life instanceof HerbivoreEdible) {
 					plantNeighbours++;
-				}
-				if (World.cell[(int) currentVect.x][(int) currentVect.y].life == null) {
+				} else if (World.cell[(int) currentVect.x][(int) currentVect.y].life == null) {
 					nullNeighbours++;
 					fertileViable.add(currentVect);
 				}
 			}
 		}
+
 	}
 
 	/**

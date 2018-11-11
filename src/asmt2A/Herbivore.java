@@ -86,10 +86,7 @@ public class Herbivore extends LifeForm {
 	 * @return boolean result
 	 */
 	public boolean isNullCheck(Vec2d vect) {
-		boolean isNull = false;
-		if (World.cell[(int) vect.x][(int) vect.y].life == null)
-			isNull = true;
-		return isNull;
+		return World.cell[(int)vect.x][(int)vect.y].life == null;
 	}
 
 	/**
@@ -100,10 +97,7 @@ public class Herbivore extends LifeForm {
 	 * @return boolean result
 	 */
 	public boolean isEdibleCheck(Vec2d vect) {
-		boolean isEdible = false;
-		if (World.cell[(int) vect.x][(int) vect.y].life instanceof HerbivoreEdible)
-			isEdible = true;
-		return isEdible;
+		return (World.cell[(int) vect.x][(int) vect.y].life instanceof HerbivoreEdible);
 	}
 
 	/**
@@ -112,12 +106,10 @@ public class Herbivore extends LifeForm {
 	 * @return returns true if it's a viable move position
 	 */
 	public boolean viablePosition(Vec2d vect) {
-		boolean clearToMove = false;
 		boolean herbivoreEdible = isEdibleCheck(vect);
 		boolean isNull = isNullCheck(vect);
-		if (herbivoreEdible || isNull)
-			clearToMove = true;
-		return clearToMove;
+		return (herbivoreEdible || isNull);
+
 	}
 
 	/**
@@ -153,7 +145,7 @@ public class Herbivore extends LifeForm {
 			return;
 		}
 		while (moved == false) {
-			int randomPositionInt = RandomGenerator.nextNumber(7);
+			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
 			Vec2d temp = moves[randomPositionInt];
 			Vec2d newHerbivoreVect = new Vec2d(herbivoreHori + (int) temp.x, herbivoreVert + (int) temp.y);
 			if (inBoundsCheck(newHerbivoreVect)) {
