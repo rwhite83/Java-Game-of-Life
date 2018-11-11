@@ -15,26 +15,15 @@ public class Herbivore extends LifeForm {
 	 */
 	private int herbivoreVert;
 	private int herbivoreHori;
+	private int moveAttempts;
 	private int lastFeed;
 	public boolean moved;
 	public static final int MAX_UNFED = 5;
+	public static final int MAX_MOVE_ATTEMPTS = 8;
 	public Colour herbivoreColour = Colour.YELLOW;
 
 	/**
-	 * Overloaded Herbivore constructor type 1
-	 * 
-	 * @param v vertical position
-	 * @param h horizontal position
-	 * @param f specified last feed
-	 */
-	Herbivore(int x, int y, int f) {
-		this.herbivoreHori = x;
-		this.herbivoreVert = y;
-		lastFeed = f;
-	}
-
-	/**
-	 * Overloaded Herbivore constructor type 2
+	 * Herbivore constructor
 	 * 
 	 * @param v vertical position
 	 * @param h horizontal position
@@ -144,7 +133,9 @@ public class Herbivore extends LifeForm {
 			die();
 			return;
 		}
-		while (moved == false) {
+		moveAttempts = 0;
+		while (moved == false && moveAttempts < MAX_MOVE_ATTEMPTS) {
+			moveAttempts++;
 			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
 			Vec2d temp = moves[randomPositionInt];
 			Vec2d newHerbivoreVect = new Vec2d(herbivoreHori + (int) temp.x, herbivoreVert + (int) temp.y);
