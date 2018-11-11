@@ -46,11 +46,6 @@ public class World {
 		public int horiPosi;
 
 		/**
-		 * a colour associated with a cell which is drawn on GUI draw
-		 */
-		public Colour colour;
-
-		/**
 		 * declaration of a lifeform used to associate a lifeform with a cell
 		 */
 		public LifeForm life;
@@ -63,11 +58,10 @@ public class World {
 		 * @param life       the lifeform variable for a cell
 		 * @param cellColour the colour variable for a cell
 		 */
-		Cell(int x, int y, LifeForm life, Colour cellColour) {
+		Cell(int x, int y, LifeForm life) {
 			this.life = life;
 			horiPosi = x;
 			vertPosi = y;
-			colour = cellColour;
 		}
 
 		/** various getters and setters */
@@ -84,14 +78,6 @@ public class World {
 			this.vertPosi = y;
 		}
 
-		public void setCellColour(Colour colour) {
-			this.colour = colour;
-		}
-
-		public String getCellColour() {
-			String stringColour = "" + colour;
-			return stringColour;
-		}
 	}
 
 	/**
@@ -102,7 +88,7 @@ public class World {
 	 * @param hori global board horizontal parameter passed in
 	 * @param vert global board vertical parameter passed in
 	 */
-	
+
 	public void createWorld(int hori, int vert) {
 		cell = new Cell[hori][vert];
 		int x, y, randomPositionInt;
@@ -110,12 +96,12 @@ public class World {
 			for (y = 0; y < worldVert; y++) {
 				randomPositionInt = RandomGenerator.nextNumber(99);
 				if (randomPositionInt >= HERBIVORE_RANDOM) {
-					cell[x][y] = new Cell(x, y, new Herbivore(x, y), Colour.YELLOW);
+					cell[x][y] = new Cell(x, y, new Herbivore(x, y));
 				} else if (randomPositionInt >= PLANT_RANDOM) {
-					cell[x][y] = new Cell(x, y, new Plant(x, y), Colour.GREEN);
+					cell[x][y] = new Cell(x, y, new Plant(x, y));
 
 				} else {
-					cell[x][y] = new Cell(x, y, null, Colour.SIENNA);
+					cell[x][y] = new Cell(x, y, null);
 				}
 			}
 		}
@@ -123,11 +109,16 @@ public class World {
 
 	/**
 	 * the GUI stuff --> creates an array of buttons coloured according to what is
-	 * in the cells of the cell array
+	 * in the cells of the cell array, now drawing the colours in lifeforms, and a
+	 * default colour for cells with null lifeforms
 	 */
 	public static void colorize(Button button, int x, int y) {
-		String colourString = World.cell[x][y].getCellColour();
-		Game.buttons[x][y].setStyle("-fx-background-color: " + colourString);
+		if (World.cell[x][y].life == null)
+			Game.buttons[x][y].setStyle("-fx-background-color: SIENNA");
+		else {
+			String colourString = "" + World.cell[x][y].life.getColour();
+			Game.buttons[x][y].setStyle("-fx-background-color: " + colourString);
+		}
 	}
 
 	/**
@@ -141,7 +132,7 @@ public class World {
 		int x, y;
 		for (x = 0; x < worldHori; x++) {
 			for (y = 0; y < worldVert; y++) {
-				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved()))) 
+				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved())))
 					cell[x][y].life.live();
 			}
 		}

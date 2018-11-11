@@ -10,13 +10,15 @@ public class Herbivore extends LifeForm {
 	 * this particular herbivore's vertical and horizontal, as well as a counter for
 	 * the last time it's fed so it can die after enough turns without feeding, and
 	 * a boolean which is turned true if the animal moves, so it doesn't move more
-	 * than once in a single turn. also a max unfed number to reference
+	 * than once in a single turn. also a constant for max unfed number to
+	 * reference. also a colour variable asociated with herbivores
 	 */
 	private int herbivoreVert;
 	private int herbivoreHori;
 	private int lastFeed;
 	public boolean moved;
 	public static final int MAX_UNFED = 5;
+	public Colour herbivoreColour = Colour.YELLOW;
 
 	/**
 	 * Overloaded Herbivore constructor type 1
@@ -52,6 +54,13 @@ public class Herbivore extends LifeForm {
 
 	public void setMoved(boolean m) {
 		moved = m;
+	}
+
+	/**
+	 * getter for the colour variable
+	 */
+	public Colour getColour() {
+		return herbivoreColour;
 	}
 
 	/**
@@ -103,7 +112,6 @@ public class Herbivore extends LifeForm {
 	 * @return returns true if it's a viable move position
 	 */
 	public boolean viablePosition(Vec2d vect) {
-
 		boolean clearToMove = false;
 		boolean herbivoreEdible = isEdibleCheck(vect);
 		boolean isNull = isNullCheck(vect);
@@ -118,8 +126,6 @@ public class Herbivore extends LifeForm {
 	 *             cell
 	 */
 	void moveSpace(Vec2d vect) {
-		World.cell[herbivoreHori][herbivoreVert].colour = Colour.SIENNA;
-		World.cell[(int) vect.x][(int) vect.y].colour = Colour.YELLOW;
 		World.cell[(int) vect.x][(int) vect.y].life = World.cell[herbivoreHori][herbivoreVert].life;
 		World.cell[herbivoreHori][herbivoreVert].life = null;
 		herbivoreHori = (int) vect.x;
@@ -133,7 +139,6 @@ public class Herbivore extends LifeForm {
 	 */
 	public void die() {
 		World.cell[herbivoreHori][herbivoreVert].life = null;
-		World.cell[herbivoreHori][herbivoreVert].colour = Colour.SIENNA;
 	}
 
 	/**
@@ -163,7 +168,7 @@ public class Herbivore extends LifeForm {
 			}
 		}
 	}
-	
+
 	/**
 	 * primary live method responding to 'turn' printout to console is only
 	 * temporary for testing calls Herbivore specific move method

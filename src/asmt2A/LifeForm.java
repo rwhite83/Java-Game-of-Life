@@ -39,4 +39,8 @@ public abstract class LifeForm {
 	public boolean getMoved() {
 		return false;
 	}
+	
+	public Colour getColour() {
+		return null;
+	}
 }
