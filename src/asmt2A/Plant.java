@@ -8,15 +8,19 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 
 	/**
 	 * a particular plant's horizontal and vertical, a vector of those variables,
-	 * and a moved boolean to tag if a plant has been instantiated this turn
+	 * and a moved boolean to tag if a plant has been instantiated this turn. also
+	 * including constants for seed function and a colour associated with plants
 	 */
 	private int plantVert;
 	private int plantHori;
 	private Vec2d plantVect;
 	public boolean moved;
+	public static final int MINIMUM_NULL = 3;
+	public static final int EXACT_PLANT = 4;
+	public Colour plantColour = Colour.GREEN;
 
 	/**
-	 * a counter for cells with null and plant lifeforms when iterationg thorough
+	 * a counter for cells with null and plant lifeforms when iterating thorough
 	 * neighbouring cells
 	 */
 	private int nullNeighbours;
@@ -35,18 +39,25 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * @param v vertical position
 	 * @param h horizontal position
 	 */
-	Plant(int y, int x) {
-		this.plantVert = y;
+	Plant(int x, int y) {
 		this.plantHori = x;
-		plantVect = new Vec2d(plantVert, plantHori);
+		this.plantVert = y;
+		plantVect = new Vec2d(plantHori, plantVert);
 
 	}
 
 	/**
 	 * a setter for the moved variable
 	 */
-	public void setMoved(boolean m) {
-		moved = m;
+	public void setMoved(boolean moved) {
+		moved = this.moved;
+	}
+
+	/**
+	 * returns the colour of the plant
+	 */
+	public Colour getColour() {
+		return plantColour;
 	}
 
 	/**
@@ -60,18 +71,18 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 		nullNeighbours = 0;
 		fertileViable.clear();
 		for (int i = 0; i < moves.length; i++) {
-			Vec2d currentVect = new Vec2d(plantVect.y + moves[i].y, plantVect.x + moves[i].x);
-			if (currentVect.y < World.worldVert && currentVect.x < World.worldHori && currentVect.y >= 0
-					&& currentVect.x >= 0) {
-				if (World.cell[(int) currentVect.y][(int) currentVect.x].life instanceof HerbivoreEdible) {
+			Vec2d currentVect = new Vec2d(plantVect.x + moves[i].x, plantVect.y + moves[i].y);
+			if (currentVect.x < World.worldHori && currentVect.y < World.worldVert && currentVect.x >= 0
+					&& currentVect.y >= 0) {
+				if (World.cell[(int) currentVect.x][(int) currentVect.y].life instanceof HerbivoreEdible) {
 					plantNeighbours++;
-				}
-				if (World.cell[(int) currentVect.y][(int) currentVect.x].life == null) {
+				} else if (World.cell[(int) currentVect.x][(int) currentVect.y].life == null) {
 					nullNeighbours++;
 					fertileViable.add(currentVect);
 				}
 			}
 		}
+
 	}
 
 	/**
@@ -83,16 +94,15 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	public void spawn() {
 		neighborCheck(plantVect);
 		if (fertileViable.size() > 0) {
-			int n = RandomGenerator.nextNumber(fertileViable.size());
-			Vec2d seedVect1 = new Vec2d(fertileViable.get(n));
+			int randomPositionInt = RandomGenerator.nextNumber(fertileViable.size());
+			Vec2d seedVect1 = new Vec2d(fertileViable.get(randomPositionInt));
 			neighborCheck(seedVect1);
 			if (fertileViable.size() > 0) {
-				Vec2d seedVect2 = new Vec2d(fertileViable.get(n));
-				if (plantNeighbours == 4 && (nullNeighbours >= 3)) {
-					World.cell[(int) seedVect2.y][(int) seedVect2.x].life = new Plant((int) seedVect2.y,
-							(int) seedVect2.x);
-					World.cell[(int) seedVect2.y][(int) seedVect2.x].colour = Colour.GREEN;
-					World.cell[(int) seedVect2.y][(int) seedVect2.x].life.setMoved(true);
+				Vec2d seedVect2 = new Vec2d(fertileViable.get(randomPositionInt));
+				if (plantNeighbours == EXACT_PLANT && (nullNeighbours >= MINIMUM_NULL)) {
+					World.cell[(int) seedVect2.x][(int) seedVect2.y].life = new Plant((int) seedVect2.x,
+							(int) seedVect2.y);
+					World.cell[(int) seedVect2.x][(int) seedVect2.y].life.setMoved(true);
 				}
 			}
 		}
