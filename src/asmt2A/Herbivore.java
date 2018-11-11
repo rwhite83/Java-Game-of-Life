@@ -10,12 +10,13 @@ public class Herbivore extends LifeForm {
 	 * this particular herbivore's vertical and horizontal, as well as a counter for
 	 * the last time it's fed so it can die after enough turns without feeding, and
 	 * a boolean which is turned true if the animal moves, so it doesn't move more
-	 * than once in a single turn
+	 * than once in a single turn. also a max unfed number to reference
 	 */
 	private int herbivoreVert;
 	private int herbivoreHori;
 	private int lastFeed;
 	public boolean moved;
+	public static final int MAX_UNFED = 5;
 
 	/**
 	 * Overloaded Herbivore constructor type 1
@@ -24,10 +25,10 @@ public class Herbivore extends LifeForm {
 	 * @param h horizontal position
 	 * @param f specified last feed
 	 */
-	Herbivore(int y, int x, int z) {
-		this.herbivoreVert = y;
+	Herbivore(int x, int y, int f) {
 		this.herbivoreHori = x;
-		lastFeed = z;
+		this.herbivoreVert = y;
+		lastFeed = f;
 	}
 
 	/**
@@ -36,18 +37,10 @@ public class Herbivore extends LifeForm {
 	 * @param v vertical position
 	 * @param h horizontal position
 	 */
-	Herbivore(int y, int x) {
-		this.herbivoreVert = y;
+	Herbivore(int x, int y) {
 		this.herbivoreHori = x;
+		this.herbivoreVert = y;
 		lastFeed = 0;
-	}
-
-	/**
-	 * primary live method responding to 'turn' printout to console is only
-	 * temporary for testing calls Herbivore specific move method
-	 */
-	public void live() {
-		move();
 	}
 
 	/**
@@ -71,7 +64,7 @@ public class Herbivore extends LifeForm {
 	 */
 	public boolean inBoundsCheck(Vec2d vect) {
 		boolean inBounds = false;
-		if ((vect.x < World.worldVert && vect.y < World.worldHori) && (vect.x >= 0 && vect.y >= 0))
+		if ((vect.x < World.worldHori && vect.y < World.worldVert) && (vect.x >= 0 && vect.y >= 0))
 			inBounds = true;
 		return inBounds;
 	}
@@ -125,12 +118,12 @@ public class Herbivore extends LifeForm {
 	 *             cell
 	 */
 	void moveSpace(Vec2d vect) {
-		World.cell[herbivoreVert][herbivoreHori].colour = Colour.SIENNA;
+		World.cell[herbivoreHori][herbivoreVert].colour = Colour.SIENNA;
 		World.cell[(int) vect.x][(int) vect.y].colour = Colour.YELLOW;
-		World.cell[(int) vect.x][(int) vect.y].life = World.cell[herbivoreVert][herbivoreHori].life;
-		World.cell[herbivoreVert][herbivoreHori].life = null;
-		herbivoreVert = (int) vect.x;
-		herbivoreHori = (int) vect.y;
+		World.cell[(int) vect.x][(int) vect.y].life = World.cell[herbivoreHori][herbivoreVert].life;
+		World.cell[herbivoreHori][herbivoreVert].life = null;
+		herbivoreHori = (int) vect.x;
+		herbivoreVert = (int) vect.y;
 		moved = true;
 	}
 
@@ -139,8 +132,8 @@ public class Herbivore extends LifeForm {
 	 * to null's sienna
 	 */
 	public void die() {
-		World.cell[herbivoreVert][herbivoreHori].life = null;
-		World.cell[herbivoreVert][herbivoreHori].colour = Colour.SIENNA;
+		World.cell[herbivoreHori][herbivoreVert].life = null;
+		World.cell[herbivoreHori][herbivoreVert].colour = Colour.SIENNA;
 	}
 
 	/**
@@ -150,14 +143,14 @@ public class Herbivore extends LifeForm {
 	 */
 
 	public void move() {
-		if (lastFeed == 5) {
+		if (lastFeed == MAX_UNFED) {
 			die();
 			return;
 		}
 		while (moved == false) {
-			int n = RandomGenerator.nextNumber(7);
-			Vec2d temp = moves[n];
-			Vec2d newHerbivoreVect = new Vec2d(herbivoreVert + (int) temp.y, herbivoreHori + (int) temp.x);
+			int randomPositionInt = RandomGenerator.nextNumber(7);
+			Vec2d temp = moves[randomPositionInt];
+			Vec2d newHerbivoreVect = new Vec2d(herbivoreHori + (int) temp.x, herbivoreVert + (int) temp.y);
 			if (inBoundsCheck(newHerbivoreVect)) {
 				if (isNullCheck(newHerbivoreVect)) {
 					moveSpace(newHerbivoreVect);
@@ -169,5 +162,13 @@ public class Herbivore extends LifeForm {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * primary live method responding to 'turn' printout to console is only
+	 * temporary for testing calls Herbivore specific move method
+	 */
+	public void live() {
+		move();
 	}
 }
