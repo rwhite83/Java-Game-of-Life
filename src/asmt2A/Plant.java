@@ -1,31 +1,33 @@
 package asmt2A;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
 
 import com.sun.javafx.geom.Vec2d;
 
 public class Plant extends LifeForm implements HerbivoreEdible {
 
 	/**
-	 * a particular plant's horizontal and vertical
+	 * a particular plant's horizontal and vertical, a vector of those variables,
+	 * and a moved boolean to tag if a plant has been instantiated this turn
 	 */
 	private int plantVert;
 	private int plantHori;
 	private Vec2d plantVect;
-	// private Vec2d tempVect = new Vec2d(plantVert, plantHori);
+	public boolean moved;
 
-	private int nullNeighbors;
-	private int plantNeighbors;
-	// private int instantNullNeighbors;
-	// private int instantPlantNeighbors;
+	/**
+	 * a counter for cells with null and plant lifeforms when iterationg thorough
+	 * neighbouring cells
+	 */
+	private int nullNeighbours;
+	private int plantNeighbours;
 
+	/**
+	 * two arraylists, one for fertile positions around plant, the other for viable
+	 * positions of those
+	 */
 	ArrayList<Vec2d> fertile = new ArrayList<Vec2d>();
 	ArrayList<Vec2d> fertileViable = new ArrayList<Vec2d>();
-
-	/** a generic random number generator */
-	Random rand = new Random();
 
 	/**
 	 * standard constructor for Plant
@@ -33,102 +35,73 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * @param v vertical position
 	 * @param h horizontal position
 	 */
-	Plant(int v, int h) {
-		this.plantVert = v;
-		this.plantHori = h;
+	Plant(int y, int x) {
+		this.plantVert = y;
+		this.plantHori = x;
 		plantVect = new Vec2d(plantVert, plantHori);
 
 	}
 
 	/**
+	 * a setter for the moved variable
+	 */
+	public void setMoved(boolean m) {
+		moved = m;
+	}
+
+	/**
 	 * goes through all neighboring cells, if they are within global bounds it
 	 * checks if they are herbivore edible and increments plantNeighbors count if it
-	 * is, and checks if the cell is null and increments if it is
+	 * is, and checks if the cell is null and increments if it is. if it's a viable
+	 * position, it adds that position to a the fertileViable array list
 	 */
 	public void neighborCheck(Vec2d tempVect) {
-		plantNeighbors = 0;
-		nullNeighbors = 0;
+		plantNeighbours = 0;
+		nullNeighbours = 0;
 		fertileViable.clear();
 		for (int i = 0; i < moves.length; i++) {
-			Vec2d currentVect = new Vec2d(plantVect.x + moves[i].x, plantVect.y + moves[i].y);
+			Vec2d currentVect = new Vec2d(plantVect.y + moves[i].y, plantVect.x + moves[i].x);
 			if (currentVect.y < World.worldVert && currentVect.x < World.worldHori && currentVect.y >= 0
 					&& currentVect.x >= 0) {
 				if (World.cell[(int) currentVect.y][(int) currentVect.x].life instanceof HerbivoreEdible) {
-					plantNeighbors++;
+					plantNeighbours++;
 				}
 				if (World.cell[(int) currentVect.y][(int) currentVect.x].life == null) {
-					nullNeighbors++;
+					nullNeighbours++;
 					fertileViable.add(currentVect);
 				}
 			}
-			// System.out.println(plantNeighbors + " " + nullNeighbors);
 		}
 	}
 
 	/**
 	 * first implements neighborCheck, then picks a random number based on the
-	 * number of nullNeighbors. it then pull a vector from the fertile array based
-	 * on the index position of plantNeighbors
-	 * 
-	 * currently runs runs without errors, but does not function, but I had to
-	 * initialize nullNeighbors and plantNeighbors to 1 to avoid random potentially
-	 * searching a zero number
+	 * number of nullNeighbors. it then pull a vector from the fertile viable array
+	 * based on the index position of plantNeighbors. puts a new plant in the chosen
+	 * cell, changes that cell's colour, and sets moved to true
 	 */
 	public void spawn() {
 		neighborCheck(plantVect);
 		if (fertileViable.size() > 0) {
-			int n = rand.nextInt(fertileViable.size());
+			int n = RandomGenerator.nextNumber(fertileViable.size());
 			Vec2d seedVect1 = new Vec2d(fertileViable.get(n));
-			System.out.println("n: " + n);
-			// System.out.println("plantVert: " + plantVert);
-			// System.out.println("plantHori: " + plantHori);
-			System.out.println("plantVect: " + plantVect);
-			// System.out.println("seedVert: " + seedVect.y);
-			// System.out.println("seedHori: " + seedVect.x);
-			System.out.println("seedVect: " + seedVect1);
 			neighborCheck(seedVect1);
 			if (fertileViable.size() > 0) {
 				Vec2d seedVect2 = new Vec2d(fertileViable.get(n));
-				// System.out.println("plantVert: " + plantVert);
-				// System.out.println("plantHori: " + plantHori);
-				System.out.println("plantVect: " + plantVect);
-				// System.out.println("seedVert: " + seedVect.y);
-				// System.out.println("seedHori: " + seedVect.x);
-				System.out.println("seedVect: " + seedVect1);
-				System.out.println();
-				System.out.println("plantNeighbours: " + plantNeighbors);
-				if (plantNeighbors == 4) {
-					System.out.println("i am in great pain please help me");
-					World.cell[(int) seedVect2.y][(int) seedVect2.x].life = new Plant((int) seedVect2.y, (int) seedVect2.x);
+				if (plantNeighbours == 4 && (nullNeighbours >= 3)) {
+					World.cell[(int) seedVect2.y][(int) seedVect2.x].life = new Plant((int) seedVect2.y,
+							(int) seedVect2.x);
 					World.cell[(int) seedVect2.y][(int) seedVect2.x].colour = Colour.GREEN;
+					World.cell[(int) seedVect2.y][(int) seedVect2.x].life.setMoved(true);
 				}
-				//World.cell[(int) seedVect2.y][(int) seedVect2.x].life = new Plant((int) seedVect2.y, (int) seedVect2.x);
-				//World.cell[0][0].life = new Plant((int) seedVect2.y, (int) seedVect2.x);
-				// seedVect.y,(int) seedVect.x);
-				
 			}
 		}
 
 	}
-	// System.out.println("n: " + n);
-	/*
-	 * //System.out.println(fertileViable); if (fertileViable.size() > 0) { int n =
-	 * rand.nextInt(fertileViable.size()); Vec2d seedVect = new
-	 * Vec2d(fertileViable.get(n)); World.cell[(int) seedVect.y][(int)
-	 * seedVect.x].life = new Plant(((int) seedVect.y),((int) seedVect.x));
-	 * //System.out.println(fertileViable.size()); System.out.println(n);
-	 * System.out.println(fertileViable.get(n)); neighborCheck(seedVect); if
-	 * (plantNeighbors == 4) {
-	 * //System.out.println("it means i am in great pain please help me");
-	 * World.cell[0][0].colour = Colour.GREEN;
-	 * System.out.println("something didn't happen"); World.cell[(int)
-	 * seedVect.y][(int) seedVect.x].life = new Plant(((int) seedVect.y),((int)
-	 * seedVect.x)); //World.cell[0][0].life = new Plant((int) seedVect.y, (int)
-	 * seedVect.x);
-	 * 
-	 * } }
-	 */
 
+	/**
+	 * calls a live function on the plant to conduct a spawn
+	 */
 	public void live() {
 		spawn();
 	}
