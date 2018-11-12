@@ -61,10 +61,7 @@ public class Herbivore extends LifeForm {
 	 * @return boolean result
 	 */
 	public boolean inBoundsCheck(Vec2d vect) {
-		boolean inBounds = false;
-		if ((vect.x < World.worldHori && vect.y < World.worldVert) && (vect.x >= 0 && vect.y >= 0))
-			inBounds = true;
-		return inBounds;
+		return (vect.x < World.worldHori && vect.y < World.worldVert) && (vect.x >= 0 && vect.y >= 0);
 	}
 
 	/**
