@@ -1,5 +1,7 @@
 package asmt2A;
 
+import java.awt.Point;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
@@ -9,7 +11,6 @@ import javafx.stage.Stage;
 
 public class Game extends Application {
 	
-
 	/**
 	 * 	Global width and height paramters
 	 *  Global height parameter 
@@ -20,23 +21,28 @@ public class Game extends Application {
 	/**
 	 * creates a world
 	 */
-	static World world = new World(GLOBAL_HORI, GLOBAL_VERT);
+	private World world;
 
 	/**
 	 * declares a 2D array of buttons for the world
 	 */
-	static Button[][] buttons;
+	private Button[][] buttons;
 
 	/**
 	 * declares a gridpane
 	 */
-	static GridPane root;
+	private GridPane root;
+
+	public Game() {
+		world = new World(new Point(GLOBAL_HORI, GLOBAL_VERT));
+		buttons = new Button[world.worldBounds.x][world.worldBounds.y];
+	}
 
 	/**
 	 * launches the GUI
 	 */
 	public void play() {
-		launchGUI(world);
+		launch();
 	}
 
 	/**
@@ -44,6 +50,29 @@ public class Game extends Application {
 	 */
 	public void turn() {
 		world.worldTurn();
+		colorizeButtons();
+	}
+
+	/**
+	 * the GUI stuff --> creates an array of buttons coloured according to what is
+	 * in the cells of the cell array, now drawing the colours in lifeforms, and a
+	 * default colour for cells with null lifeforms
+	 */
+	public void colorize(Button button, Cell cell) {
+		if (cell.life == null)
+			button.setStyle("-fx-background-color: SIENNA");
+		else {
+			String colourString = "" + cell.life.getColour();
+			button.setStyle("-fx-background-color: " + colourString);
+		}
+	}
+
+	public void colorizeButtons()
+	{
+		for (int x = 0; x < world.worldBounds.x; x++) {
+			for (int y = 0; y < world.worldBounds.y; y++)
+				colorize(buttons[x][y], world.cell[x][y]);
+		}
 	}
 
 	/**
@@ -54,27 +83,16 @@ public class Game extends Application {
 	}
 
 	/**
-	 * launches the GUI with a launch command
-	 * 
-	 * @param GUIworld is the GUI passed in variable
-	 */
-	public static void launchGUI(World GUIworld) {
-		world = GUIworld;
-		buttons = new Button[World.worldHori][World.worldVert];
-		launch();
-	}
-
-	/**
 	 * starts the gridpane, creates buttons and populates the 2D array
 	 */
 	public void start(Stage stage) {
 		root = new GridPane();
 		int x, y;
-		for (x = 0; x < World.worldHori; x++) {
-			for (y = 0; y < World.worldVert; y++) {
+		for (x = 0; x < world.worldBounds.x; x++) {
+			for (y = 0; y < world.worldBounds.y; y++) {
 				buttons[x][y] = new Button();
 				root.add(buttons[x][y], x, y);
-				World.colorize(buttons[x][y], x, y);
+				colorize(buttons[x][y], world.cell[x][y]);
 				buttons[x][y].setOnAction(this::processButtonPress);
 			}
 		}

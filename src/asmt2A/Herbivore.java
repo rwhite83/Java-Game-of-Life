@@ -1,10 +1,13 @@
 package asmt2A;
 
-import com.sun.javafx.geom.Vec2d;
+import java.awt.Point;
 
 /** extends lifeForm and implements relevant methods */
 
 public class Herbivore extends LifeForm {
+
+	public static final int MAX_UNFED = 5;
+	public static final int MAX_MOVE_ATTEMPTS = 8;
 
 	/**
 	 * this particular herbivore's vertical and horizontal, as well as a counter for
@@ -13,101 +16,71 @@ public class Herbivore extends LifeForm {
 	 * than once in a single turn. also a constant for max unfed number to
 	 * reference. also a colour variable asociated with herbivores
 	 */
-	private int herbivoreVert;
-	private int herbivoreHori;
 	private int moveAttempts;
 	private int lastFeed;
-	public boolean moved;
-	public static final int MAX_UNFED = 5;
-	public static final int MAX_MOVE_ATTEMPTS = 8;
-	public Colour herbivoreColour = Colour.YELLOW;
 
 	/**
 	 * Herbivore constructor
 	 * 
-	 * @param v vertical position
-	 * @param h horizontal position
+	 * @param world The world the herbivore belongs to
+	 * @param position grid position of herbivore
 	 */
-	Herbivore(int x, int y) {
-		this.herbivoreHori = x;
-		this.herbivoreVert = y;
+	Herbivore(World world, Point position)	{
+		super(world, position, Colour.YELLOW);
 		lastFeed = 0;
-	}
-
-	/**
-	 * getters and setters for the moved boolean
-	 */
-	public boolean getMoved() {
-		return moved;
-	}
-
-	public void setMoved(boolean m) {
-		moved = m;
-	}
-
-	/**
-	 * getter for the colour variable
-	 */
-	public Colour getColour() {
-		return herbivoreColour;
 	}
 
 	/**
 	 * method to check if a step the animal tries to move to is within the
 	 * boundaries of the world
 	 * 
-	 * @param x vertical position
-	 * @param y horizontal position
+	 * @param p position to check in bounds of the world
 	 * @return boolean result
 	 */
-	public boolean inBoundsCheck(Vec2d vect) {
-		return (vect.x < World.worldHori && vect.y < World.worldVert) && (vect.x >= 0 && vect.y >= 0);
+	public boolean inBoundsCheck(Point p) {
+		return (p.x < world.worldBounds.x && p.y < world.worldBounds.y) && (p.x >= 0 && p.y >= 0);
 	}
 
 	/**
 	 * method to check if a cell the animal tries to move to is null
 	 * 
-	 * @param x vertical position
-	 * @param y horizontal position
+	 * @param p position to check if lifeform is null
 	 * @return boolean result
 	 */
-	public boolean isNullCheck(Vec2d vect) {
-		return World.cell[(int)vect.x][(int)vect.y].life == null;
+	public boolean isNullCheck(Point p) {
+		return world.cell[p.x][p.y].life == null;
 	}
 
 	/**
 	 * method to check if the contents of a cell moving into are edible
 	 * 
-	 * @param x vertical position
-	 * @param y horizontal position
+	 * @param p position to check if is edible
 	 * @return boolean result
 	 */
-	public boolean isEdibleCheck(Vec2d vect) {
-		return (World.cell[(int) vect.x][(int) vect.y].life instanceof HerbivoreEdible);
+	public boolean isEdibleCheck(Point p) {
+		return (world.cell[p.x][p.y].life instanceof HerbivoreEdible);
 	}
 
 	/**
 	 * 
-	 * @param vect the target vector
+	 * @param p the position to check if a herbivore can move to.
 	 * @return returns true if it's a viable move position
 	 */
-	public boolean viablePosition(Vec2d vect) {
-		boolean herbivoreEdible = isEdibleCheck(vect);
-		boolean isNull = isNullCheck(vect);
+	public boolean viablePosition(Point p) {
+		boolean herbivoreEdible = isEdibleCheck(p);
+		boolean isNull = isNullCheck(p);
 		return (herbivoreEdible || isNull);
-
 	}
 
 	/**
 	 * 
-	 * @param vect the target vector orchestrates a move of an Herbivore to a new
+	 * @param p the target point orchestrates a move of an Herbivore to a new
 	 *             cell
 	 */
-	void moveSpace(Vec2d vect) {
-		World.cell[(int) vect.x][(int) vect.y].life = World.cell[herbivoreHori][herbivoreVert].life;
-		World.cell[herbivoreHori][herbivoreVert].life = null;
-		herbivoreHori = (int) vect.x;
-		herbivoreVert = (int) vect.y;
+	void moveSpace(Point p) {
+		world.cell[p.x][p.y].life = world.cell[position.x][position.y].life;
+		world.cell[position.x][position.y].life = null;
+		position = p;
 		moved = true;
 	}
 
@@ -116,7 +89,7 @@ public class Herbivore extends LifeForm {
 	 * to null's sienna
 	 */
 	public void die() {
-		World.cell[herbivoreHori][herbivoreVert].life = null;
+		world.cell[position.x][position.y].life = null;
 	}
 
 	/**
@@ -134,8 +107,8 @@ public class Herbivore extends LifeForm {
 		while (moved == false && moveAttempts < MAX_MOVE_ATTEMPTS) {
 			moveAttempts++;
 			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
-			Vec2d temp = moves[randomPositionInt];
-			Vec2d newHerbivoreVect = new Vec2d(herbivoreHori + (int) temp.x, herbivoreVert + (int) temp.y);
+			Point temp = moves[randomPositionInt];
+			Point newHerbivoreVect = new Point(position.x + temp.x, position.y + temp.y);
 			if (inBoundsCheck(newHerbivoreVect)) {
 				if (isNullCheck(newHerbivoreVect)) {
 					moveSpace(newHerbivoreVect);
