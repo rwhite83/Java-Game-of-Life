@@ -32,18 +32,6 @@ public class Herbivore extends LifeForm {
 	}
 
 	/**
-	 * getters and setters for the moved boolean
-	 */
-	public boolean getMoved() {
-		return moved;
-	}
-
-	public void setMoved(boolean m) {
-		moved = m;
-	}
-
-
-	/**
 	 * method to check if a step the animal tries to move to is within the
 	 * boundaries of the world
 	 * 

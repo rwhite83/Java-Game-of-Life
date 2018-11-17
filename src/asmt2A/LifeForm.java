@@ -49,7 +49,7 @@ public abstract class LifeForm {
 	}
 
 	public boolean getMoved() {
-		return false;
+		return moved;
 	}
 	
 	public Colour getColour() {
