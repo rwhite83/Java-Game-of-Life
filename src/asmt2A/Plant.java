@@ -11,7 +11,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * including constants for seed function and a colour associated with plants
 	 */
 	public static final int MINIMUM_NULL = 3;
-	public static final int EXACT_PLANT = 4;
+	public static final int MINIMUM_PLANT = 2;
 
 	/**
 	 * a counter for cells with null and plant lifeforms when iterating thorough
@@ -60,7 +60,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 			Point currentVect = new Point(position.x + moves[i].x, position.y + moves[i].y);
 			if (currentVect.x < world.worldBounds.x && currentVect.y < world.worldBounds.y && currentVect.x >= 0
 					&& currentVect.y >= 0) {
-				if (World.cell[currentVect.x][currentVect.y].life instanceof HerbivoreEdible) {
+				if (World.cell[currentVect.x][currentVect.y].life instanceof Plant) {
 					plantNeighbours++;
 				} else if (World.cell[currentVect.x][currentVect.y].life == null) {
 					nullNeighbours++;
@@ -79,20 +79,16 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 */
 	public void spawn() {
 		neighborCheck(position);
-		if (fertile.size() > 0 && nullNeighbours >= MINIMUM_NULL) {
+		if (fertile.size() > 0 && nullNeighbours >= MINIMUM_NULL && plantNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(fertile.size());
-			Point seedVect1 = new Point(fertile.get(randomPositionInt));
-			neighborCheck(seedVect1);
-			if (fertile.size() > 0) {
-				Point seedVect2 = new Point(fertile.get(randomPositionInt));
-				if (plantNeighbours == EXACT_PLANT) {
-					World.cell[seedVect2.x][seedVect2.y].life = new Plant(world, seedVect2);
-					World.cell[seedVect2.x][seedVect2.y].life.setMoved(true);
+			Point seedVect = new Point(fertile.get(randomPositionInt));
+					World.cell[seedVect.x][seedVect.y].life = new Plant(world, seedVect);
+					World.cell[seedVect.x][seedVect.y].life.setMoved(true);
 				}
 
 			}
-		}
-	}
+		
+	
 
 	/**
 	 * calls a live function on the plant to conduct a spawn
