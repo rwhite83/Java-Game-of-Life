@@ -1,8 +1,7 @@
 package asmt2A;
 
+import java.awt.Point;
 import java.util.ArrayList;
-
-import com.sun.javafx.geom.Vec2d;
 
 public class Plant extends LifeForm implements HerbivoreEdible {
 
@@ -11,17 +10,12 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * and a moved boolean to tag if a plant has been instantiated this turn. also
 	 * including constants for seed function and a colour associated with plants
 	 */
-	private int plantVert;
-	private int plantHori;
-	private Vec2d plantVect;
-	public boolean moved;
 	public static final int MINIMUM_NULL = 3;
-	public static final int EXACT_PLANT = 4;
-	public Colour plantColour = Colour.GREEN;
+	public static final int MINIMUM_PLANT = 2;
 
 	/**
 	 * a counter for cells with null and plant lifeforms when iterating thorough
-	 * neighbouring cells
+	 * neighboring cells
 	 */
 	private int nullNeighbours;
 	private int plantNeighbours;
@@ -29,7 +23,7 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	/**
 	 * an arraylist to check for fertile positions around a particular grid location
 	 */
-	ArrayList<Vec2d> fertile = new ArrayList<Vec2d>();
+	ArrayList<Point> fertile = new ArrayList<Point>();
 
 	/**
 	 * standard constructor for Plant
@@ -37,11 +31,8 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * @param v vertical position
 	 * @param h horizontal position
 	 */
-	Plant(int x, int y) {
-		this.plantHori = x;
-		this.plantVert = y;
-		plantVect = new Vec2d(plantHori, plantVert);
-
+	Plant(World world, Point position) {
+		super(world, position, Colour.GREEN);
 	}
 
 	/**
@@ -54,9 +45,6 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	/**
 	 * returns the colour of the plant
 	 */
-	public Colour getColour() {
-		return plantColour;
-	}
 
 	/**
 	 * goes through all neighboring cells, if they are within global bounds it
@@ -64,17 +52,17 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * is, and checks if the cell is null and increments if it is. if it's a viable
 	 * position, it adds that position to a the fertileViable array list
 	 */
-	public void neighborCheck(Vec2d tempVect) {
+	public void neighborCheck(Point tempVect) {
 		plantNeighbours = 0;
 		nullNeighbours = 0;
 		fertile.clear();
 		for (int i = 0; i < moves.length; i++) {
-			Vec2d currentVect = new Vec2d(plantVect.x + moves[i].x, plantVect.y + moves[i].y);
-			if (currentVect.x < World.worldHori && currentVect.y < World.worldVert && currentVect.x >= 0
+			Point currentVect = new Point(position.x + moves[i].x, position.y + moves[i].y);
+			if (currentVect.x < world.worldBounds.x && currentVect.y < world.worldBounds.y && currentVect.x >= 0
 					&& currentVect.y >= 0) {
-				if (World.cell[(int) currentVect.x][(int) currentVect.y].life instanceof HerbivoreEdible) {
+				if (World.cell[currentVect.x][currentVect.y].life instanceof Plant) {
 					plantNeighbours++;
-				} else if (World.cell[(int) currentVect.x][(int) currentVect.y].life == null) {
+				} else if (World.cell[currentVect.x][currentVect.y].life == null) {
 					nullNeighbours++;
 					fertile.add(currentVect);
 				}
@@ -90,22 +78,17 @@ public class Plant extends LifeForm implements HerbivoreEdible {
 	 * cell, changes that cell's colour, and sets moved to true
 	 */
 	public void spawn() {
-		neighborCheck(plantVect);
-		if (fertile.size() > 0 && nullNeighbours >= MINIMUM_NULL) {
+		neighborCheck(position);
+		if (fertile.size() > 0 && nullNeighbours >= MINIMUM_NULL && plantNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(fertile.size());
-			Vec2d seedVect1 = new Vec2d(fertile.get(randomPositionInt));
-			neighborCheck(seedVect1);
-			if (fertile.size() > 0) {
-				Vec2d seedVect2 = new Vec2d(fertile.get(randomPositionInt));
-				if (plantNeighbours == EXACT_PLANT) {
-					World.cell[(int) seedVect2.x][(int) seedVect2.y].life = new Plant((int) seedVect2.x,
-							(int) seedVect2.y);
-					World.cell[(int) seedVect2.x][(int) seedVect2.y].life.setMoved(true);
+			Point seedVect = new Point(fertile.get(randomPositionInt));
+					World.cell[seedVect.x][seedVect.y].life = new Plant(world, seedVect);
+					World.cell[seedVect.x][seedVect.y].life.setMoved(true);
 				}
 
 			}
-		}
-	}
+		
+	
 
 	/**
 	 * calls a live function on the plant to conduct a spawn
