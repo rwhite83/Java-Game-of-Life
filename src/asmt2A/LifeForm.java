@@ -69,7 +69,7 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean inBoundsCheck(Point point) {
+	public boolean isInBounds(Point point) {
 		return (point.x < world.worldBounds.x && point.y < world.worldBounds.y) && (point.x >= 0 && point.y >= 0);
 	}
 
@@ -80,7 +80,7 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean isNullCheck(Point point) {
+	public boolean isNull(Point point) {
 		return World.cell[(int) point.x][(int) point.y].life == null;
 	}
 
@@ -91,7 +91,7 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean isEdibleCheck(Point point) {
+	public boolean isEdible(Point point) {
 		return false;
 	}
 

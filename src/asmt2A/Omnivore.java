@@ -23,11 +23,11 @@ public class Omnivore extends LifeForm implements CarnivoreEdible {
 		lastFeed = 0;
 	}
 
-	public boolean isEdibleCheck(Point Point) {
+	public boolean isEdible(Point Point) {
 		return (World.cell[Point.x][Point.y].life instanceof OmnivoreEdible);
 	}
 	
-	public boolean giveBirthCheck() {
+	public boolean isBirthable() {
 		return (myNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS && myEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
 	}
 
@@ -43,17 +43,17 @@ public class Omnivore extends LifeForm implements CarnivoreEdible {
 			Point temp = moves[randomPositionInt];
 			Point newOmnivorePoint = new Point(position.x + temp.x, position.y + temp.y);
 			Point oldOmnivorePoint = new Point(position.x, position.y);
-			if (inBoundsCheck(newOmnivorePoint)) {
-				if (isNullCheck(newOmnivorePoint)) {
+			if (isInBounds(newOmnivorePoint)) {
+				if (isNull(newOmnivorePoint)) {
 					moveSpace(newOmnivorePoint);
 					lastFeed++;
 				}
-				if (isEdibleCheck(newOmnivorePoint)) {
+				if (isEdible(newOmnivorePoint)) {
 					eat(position, newOmnivorePoint);
 					lastFeed = 0;
 					moved = true;
 				}
-				if (giveBirthCheck()) {
+				if (isBirthable()) {
 					World.cell[oldOmnivorePoint.x][oldOmnivorePoint.y].life = new Omnivore(world, oldOmnivorePoint);
 					World.cell[oldOmnivorePoint.x][oldOmnivorePoint.y].life.setMoved(true);
 				}
