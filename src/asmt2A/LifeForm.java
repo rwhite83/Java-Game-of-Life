@@ -52,8 +52,7 @@ public abstract class LifeForm {
 	/**
 	 * various parent methods defined in children classes
 	 */
-	public void live() {
-	}
+	abstract void live();
 
 	public void setMoved(boolean moved) {
 		this.moved = moved;
@@ -104,7 +103,7 @@ public abstract class LifeForm {
 	/**
 	 * 
 	 * @param Point the target Pointor orchestrates a move of an Herbivore to a new
-	 *             cell
+	 *              cell
 	 */
 	void moveSpace(Point point) {
 		World.cell[point.x][point.y].life = World.cell[position.x][position.y].life;
@@ -120,10 +119,51 @@ public abstract class LifeForm {
 	public void die() {
 		World.cell[position.x][position.y].life = null;
 	}
-	
+
 	public void eat(Point pointFrom, Point pointTo) {
 		World.cell[pointTo.x][pointTo.y].life.die();
 		moveSpace(pointTo);
 	}
 
+	public void neighborCheck(Point tempPoint) {
+		herbivoreNeighbours = 0;
+		herbivoreEdibleCount = 0;
+		plantNeighbours = 0;
+		carnivoreNeighbours = 0;
+		omnivoreNeighbours = 0;
+		omnivoreEdibleCount = 0;
+		carnivoreEdibleCount = 0;
+		nullNeighbours = 0;
+		viableMoves.clear();
+		for (int i = 0; i < moves.length; i++) {
+			Point currentPoint = new Point(position.x + moves[i].x, position.y + moves[i].y);
+			if (currentPoint.x < world.worldBounds.x && currentPoint.y < world.worldBounds.y && currentPoint.x >= 0
+					&& currentPoint.y >= 0) {
+				if (World.cell[currentPoint.x][currentPoint.y].life instanceof HerbivoreEdible
+						&& World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
+					plantNeighbours++;
+					omnivoreEdibleCount++;
+					herbivoreEdibleCount++;
+					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
+				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof CarnivoreEdible
+						&& World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
+					herbivoreNeighbours++;
+					omnivoreEdibleCount++;
+					carnivoreEdibleCount++;
+					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
+				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
+					carnivoreNeighbours++;
+					omnivoreEdibleCount++;
+					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
+				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof CarnivoreEdible) {
+					omnivoreNeighbours++;
+					carnivoreEdibleCount++;
+					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
+				} else if (World.cell[currentPoint.x][currentPoint.y].life == null) {
+					nullNeighbours++;
+					viableMoves.add(currentPoint);
+				}
+			}
+		}
+	}
 }

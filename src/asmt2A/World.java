@@ -14,6 +14,14 @@ public class World {
 	public static final int CARNIVORE_RANDOM = 50;
 	public static final int OMNIVORE_RANDOM = 45;
 	
+	//////////////////testing///////////////////////////
+	int plantCount = 0;
+	int herbivoreCount = 0;
+	int carnivoreCount = 0;
+	int omnivoreCount = 0;
+	int turnCounter= 0;
+	////////////////////////////////////////////////////
+	
 	/**
 	 * 
 	 */
@@ -96,8 +104,17 @@ public class World {
 				} else {
 					cell[x][y] = new Cell(newPoint, null);
 				}
+				if(cell[x][y].life instanceof Plant)
+					plantCount++;
+				if(cell[x][y].life instanceof Herbivore)
+					herbivoreCount++;
+				if(cell[x][y].life instanceof Carnivore)
+					carnivoreCount++;
+				if(cell[x][y].life instanceof Omnivore)
+					omnivoreCount++;
 			}
 		}
+		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c " + carnivoreCount + " o: " + omnivoreCount);
 	}
 
 
@@ -112,6 +129,20 @@ public class World {
 		int x, y;
 		for (x = 0; x < worldBounds.x; x++) {
 			for (y = 0; y < worldBounds.y; y++) {
+				
+				//////////////////testing///////////////////////////
+				
+				if(cell[x][y].life instanceof Plant)
+					plantCount++;
+				if(cell[x][y].life instanceof Herbivore)
+					herbivoreCount++;
+				if(cell[x][y].life instanceof Carnivore)
+					carnivoreCount++;
+				if(cell[x][y].life instanceof Omnivore)
+					omnivoreCount++;
+				
+				////////////////////////////////////////////////////
+				
 				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved())))
 					cell[x][y].life.live();
 			}
@@ -122,5 +153,14 @@ public class World {
 					cell[x][y].life.setMoved(false);
 			}
 		}
+		
+		//////////////////testing///////////////////////////
+		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c " + carnivoreCount + " o: " + omnivoreCount);
+		plantCount = 0;
+		herbivoreCount = 0;
+		carnivoreCount = 0;
+		omnivoreCount = 0;
+		turnCounter++;
+		////////////////////////////////////////////////////
 	}
 }

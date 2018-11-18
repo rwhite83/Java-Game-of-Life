@@ -23,24 +23,6 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 		super(world, position, Colour.GREEN);
 	}
 
-	public void neighborCheck(Point tempPoint) {
-		plantNeighbours = 0;
-		nullNeighbours = 0;
-		viableMoves.clear();
-		for (int i = 0; i < moves.length; i++) {
-			Point currentPoint = new Point(position.x + moves[i].x, position.y + moves[i].y);
-			if (currentPoint.x < world.worldBounds.x && currentPoint.y < world.worldBounds.y && currentPoint.x >= 0
-					&& currentPoint.y >= 0) {
-				if (World.cell[currentPoint.x][currentPoint.y].life instanceof Plant) {
-					plantNeighbours++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life == null) {
-					nullNeighbours++;
-					viableMoves.add(currentPoint);
-				}
-			}
-		}
-	}
-
 	/**
 	 * first implements neighborCheck, then picks a random number based on the
 	 * number of nullNeighbors. it then pull a Pointor from the fertile viable array
@@ -51,9 +33,9 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 		neighborCheck(position);
 		if (viableMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && plantNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-			Point seedVect = new Point(viableMoves.get(randomPositionInt));
-			World.cell[seedVect.x][seedVect.y].life = new Plant(world, seedVect);
-			World.cell[seedVect.x][seedVect.y].life.setMoved(true);
+			Point seedPoint = new Point(viableMoves.get(randomPositionInt));
+			World.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);
+			World.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
 		}
 	}
 }

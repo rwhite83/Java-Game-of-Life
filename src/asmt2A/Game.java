@@ -14,8 +14,8 @@ public class Game extends Application {
 	/**
 	 * Global width and height parameters Global height parameter
 	 */
-	public static final int GLOBAL_HORI = 30;
-	public static final int GLOBAL_VERT = 30;
+	public static final int GLOBAL_HORI = 5;
+	public static final int GLOBAL_VERT = 5;
 
 	/**
 	 * creates a world
