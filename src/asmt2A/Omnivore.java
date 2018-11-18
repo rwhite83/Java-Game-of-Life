@@ -63,8 +63,9 @@ public class Omnivore extends LifeForm implements CarnivoreEdible {
 					lastFeed++;
 				}
 				if (isEdibleCheck(newOmnivorePoint)) {
-					moveSpace(newOmnivorePoint);
+					eat(position, newOmnivorePoint);
 					lastFeed = 0;
+					moved = true;
 				}
 			}
 		}

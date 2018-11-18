@@ -75,8 +75,8 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean inBoundsCheck(Point Point) {
-		return (Point.x < world.worldBounds.x && Point.y < world.worldBounds.y) && (Point.x >= 0 && Point.y >= 0);
+	public boolean inBoundsCheck(Point point) {
+		return (point.x < world.worldBounds.x && point.y < world.worldBounds.y) && (point.x >= 0 && point.y >= 0);
 	}
 
 	/**
@@ -86,8 +86,8 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean isNullCheck(Point Point) {
-		return World.cell[(int) Point.x][(int) Point.y].life == null;
+	public boolean isNullCheck(Point point) {
+		return World.cell[(int) point.x][(int) point.y].life == null;
 	}
 
 	/**
@@ -97,20 +97,8 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean isEdibleCheck(Point Point) {
+	public boolean isEdibleCheck(Point point) {
 		return false;
-	}
-
-	/**
-	 * 
-	 * @param Point the target Pointor
-	 * @return returns true if it's a viable move position
-	 */
-	public boolean viablePosition(Point Point) {
-		boolean herbivoreEdible = isEdibleCheck(Point);
-		boolean isNull = isNullCheck(Point);
-		return (herbivoreEdible || isNull);
-
 	}
 
 	/**
@@ -118,10 +106,10 @@ public abstract class LifeForm {
 	 * @param Point the target Pointor orchestrates a move of an Herbivore to a new
 	 *             cell
 	 */
-	void moveSpace(Point Point) {
-		World.cell[Point.x][Point.y].life = World.cell[position.x][position.y].life;
+	void moveSpace(Point point) {
+		World.cell[point.x][point.y].life = World.cell[position.x][position.y].life;
 		World.cell[position.x][position.y].life = null;
-		position = Point;
+		position = point;
 		moved = true;
 	}
 
@@ -132,40 +120,10 @@ public abstract class LifeForm {
 	public void die() {
 		World.cell[position.x][position.y].life = null;
 	}
-
-	/**
-	 * goes through all neighboring cells, if they are within global bounds it
-	 * checks if they are herbivore edible and increments plantNeighbors count if it
-	 * is, and checks if the cell is null and increments if it is. if it's a viable
-	 * position, it adds that position to a the fertileViable array list
-	 */
-	public void neighborCheck(Point tempPoint) {
-		plantNeighbours = 0;
-		nullNeighbours = 0;
-		viableMoves.clear();
-		for (int i = 0; i < moves.length; i++) {
-			Point currentPoint = new Point(position.x + moves[i].x, position.y + moves[i].y);
-			if (currentPoint.x < world.worldBounds.x && currentPoint.y < world.worldBounds.y && currentPoint.x >= 0
-					&& currentPoint.y >= 0) {
-				if (World.cell[currentPoint.x][currentPoint.y].life instanceof Plant) {
-					plantNeighbours++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof Herbivore) {
-					herbivoreNeighbours++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof Carnivore) {
-					carnivoreNeighbours++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof Omnivore) {
-					omnivoreNeighbours++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof HerbivoreEdible && World.cell[currentPoint.x][currentPoint.y].life instanceof Herbivore) {
-					herbivoreEdibleCount++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof CarnivoreEdible) {
-					carnivoreEdibleCount++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
-					omnivoreEdibleCount++;
-				} else if (World.cell[currentPoint.x][currentPoint.y].life == null) {
-					nullNeighbours++;
-					viableMoves.add(currentPoint);
-				}
-			}
-		}
+	
+	public void eat(Point pointFrom, Point pointTo) {
+		World.cell[pointTo.x][pointTo.y].life.die();
+		moveSpace(pointTo);
 	}
+
 }

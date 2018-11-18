@@ -20,23 +20,54 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 		lastFeed = 0;
 	}
 
-	/**
-	 * kills animal if lastfeed reaches 5. while moved conditional ensures that the
-	 * animal keeps trying to move until it finds a move. selects a random
-	 * neighboring cell and attempts to move there after performing required checks
-	 */
+	public boolean isEdibleCheck(Point Point) {
+		return (World.cell[Point.x][Point.y].life instanceof HerbivoreEdible);
+	}
+
+	public void neighborCheck(Point tempPoint) {
+		herbivoreNeighbours = 0;
+		herbivoreEdibleCount = 0;
+		nullNeighbours = 0;
+		viableMoves.clear();
+		for (int i = 0; i < moves.length; i++) {
+			Point currentPoint = new Point(position.x + moves[i].x, position.y + moves[i].y);
+			if (currentPoint.x < world.worldBounds.x && currentPoint.y < world.worldBounds.y && currentPoint.x >= 0
+					&& currentPoint.y >= 0) {
+				if (World.cell[currentPoint.x][currentPoint.y].life instanceof Herbivore) {
+					herbivoreNeighbours++;
+				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof HerbivoreEdible) {
+					herbivoreEdibleCount++;
+					viableMoves.add(currentPoint);
+				} else if (World.cell[currentPoint.x][currentPoint.y].life == null) {
+					nullNeighbours++;
+					viableMoves.add(currentPoint);
+				}
+			}
+		}
+	}
+
 	public void live() {
-		if (lastFeed == MAX_UNFED) {
+		if (lastFeed >= MAX_UNFED) {
 			die();
 			return;
 		}
 		moveAttempts = 0;
-		neighborCheck(position);
-		if (viableMoves.size() > 0) {
-			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-			Point seedPoint = new Point(viableMoves.get(randomPositionInt));
-			World.cell[seedPoint.x][seedPoint.y].life = new Herbivore(world, seedPoint);
-			World.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
+		while (moved == false && moveAttempts < MAX_MOVE_ATTEMPTS) {
+			moveAttempts++;
+			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
+			Point temp = moves[randomPositionInt];
+			Point newHerbivorePoint = new Point(position.x + temp.x, position.y + temp.y);
+			if (inBoundsCheck(newHerbivorePoint)) {
+				if (isNullCheck(newHerbivorePoint)) {
+					moveSpace(newHerbivorePoint);
+					lastFeed++;
+				}
+				if (isEdibleCheck(newHerbivorePoint)) {
+					eat(position, newHerbivorePoint);
+					lastFeed = 0;
+					moved = true;
+				}
+			}
 		}
 	}
 }

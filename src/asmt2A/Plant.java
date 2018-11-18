@@ -22,7 +22,7 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 	Plant(World world, Point position) {
 		super(world, position, Colour.GREEN);
 	}
-	
+
 	public void neighborCheck(Point tempPoint) {
 		plantNeighbours = 0;
 		nullNeighbours = 0;
@@ -51,10 +51,9 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 		neighborCheck(position);
 		if (viableMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && plantNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-			Point seedPoint = new Point(viableMoves.get(randomPositionInt));
-			World.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);
-			World.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
+			Point seedVect = new Point(viableMoves.get(randomPositionInt));
+			World.cell[seedVect.x][seedVect.y].life = new Plant(world, seedVect);
+			World.cell[seedVect.x][seedVect.y].life.setMoved(true);
 		}
-
 	}
 }
