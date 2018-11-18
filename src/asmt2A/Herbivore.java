@@ -23,12 +23,12 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 		lastFeed = 0;
 	}
 
-	public boolean isEdibleCheck(Point Point) {
+	public boolean isEdible(Point Point) {
 		return (World.cell[Point.x][Point.y].life instanceof HerbivoreEdible);
 	}
 	
-	public boolean giveBirthCheck() {
-		return (herbivoreNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS && herbivoreEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
+	public boolean isBirthable() {
+		return (myNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS && myEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
 	}
 
 	public void live() {
@@ -43,17 +43,17 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 			Point temp = moves[randomPositionInt];
 			Point newHerbivorePoint = new Point(position.x + temp.x, position.y + temp.y);
 			Point oldHerbivorePoint = new Point(position.x, position.y);
-			if (inBoundsCheck(newHerbivorePoint)) {
-				if (isNullCheck(newHerbivorePoint)) {
+			if (isInBounds(newHerbivorePoint)) {
+				if (isNull(newHerbivorePoint)) {
 					moveSpace(newHerbivorePoint);
 					lastFeed++;
 				}
-				if (isEdibleCheck(newHerbivorePoint)) {
+				if (isEdible(newHerbivorePoint)) {
 					eat(position, newHerbivorePoint);
 					lastFeed = 0;
 					moved = true;
 				}
-				if (giveBirthCheck()) {
+				if (isBirthable()) {
 					World.cell[oldHerbivorePoint.x][oldHerbivorePoint.y].life = new Herbivore(world, oldHerbivorePoint);
 					World.cell[oldHerbivorePoint.x][oldHerbivorePoint.y].life.setMoved(true);
 				}
