@@ -9,8 +9,10 @@ public class World {
 	 * width of game cell declares a 2D array of cells
 	 */
 	public static final int RANDOM_PULL = 99;
-	public static final int PLANT_RANDOM = 65;
-	public static final int HERBIVORE_RANDOM = 85;
+	public static final int PLANT_RANDOM = 60;
+	public static final int HERBIVORE_RANDOM = 80;
+	public static final int CARNIVORE_RANDOM = 50;
+	public static final int OMNIVORE_RANDOM = 45;
 	
 	/**
 	 * 
@@ -87,7 +89,10 @@ public class World {
 					cell[x][y] = new Cell(newPoint, new Herbivore(this, newPoint));
 				} else if (randomPositionInt >= PLANT_RANDOM) {
 					cell[x][y] = new Cell(newPoint, new Plant(this, newPoint));
-
+				} else if (randomPositionInt >= CARNIVORE_RANDOM) {
+					cell[x][y] = new Cell(newPoint, new Carnivore(this, newPoint));
+				} else if (randomPositionInt >= OMNIVORE_RANDOM) {
+					cell[x][y] = new Cell(newPoint, new Omnivore(this, newPoint));
 				} else {
 					cell[x][y] = new Cell(newPoint, null);
 				}

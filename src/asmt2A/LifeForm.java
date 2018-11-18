@@ -1,11 +1,12 @@
 package asmt2A;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 public abstract class LifeForm {
 
 	/**
-	 * an array list of vector positions relative any given cell
+	 * an array list of Pointor positions relative any given cell
 	 */
 	public static Point UpLeft = new Point(-1, 1);
 	public static Point Up = new Point(0, 1);
@@ -17,12 +18,31 @@ public abstract class LifeForm {
 	public static Point DownRight = new Point(1, -1);
 
 	Point[] moves = new Point[] { UpLeft, Up, UpRight, Left, Right, DownLeft, Down, DownRight };
-	
+
 	protected Point position;
 	protected Colour colour;
 	protected boolean moved = false;
 	protected World world;
-	
+
+	protected int moveAttempts;
+	protected int lastFeed;
+
+	protected int plantNeighbours;
+	protected int herbivoreNeighbours;
+	protected int carnivoreNeighbours;
+	protected int omnivoreNeighbours;
+
+	protected int herbivoreEdibleCount;
+	protected int omnivoreEdibleCount;
+	protected int carnivoreEdibleCount;
+
+	protected int nullNeighbours;
+
+	/**
+	 * an arraylist to check for fertile positions around a particular grid location
+	 */
+	ArrayList<Point> viableMoves = new ArrayList<Point>();
+
 	protected LifeForm(World world, Point position, Colour colour) {
 		this.world = world;
 		this.position = position;
@@ -35,15 +55,6 @@ public abstract class LifeForm {
 	public void live() {
 	}
 
-	public void move() {
-	}
-
-	public void spawn() {
-	}
-
-	public void die() {
-	}
-
 	public void setMoved(boolean moved) {
 		this.moved = moved;
 	}
@@ -51,8 +62,68 @@ public abstract class LifeForm {
 	public boolean getMoved() {
 		return moved;
 	}
-	
+
 	public Colour getColour() {
 		return colour;
 	}
+
+	/**
+	 * method to check if a step the animal tries to move to is within the
+	 * boundaries of the world
+	 * 
+	 * @param x vertical position
+	 * @param y horizontal position
+	 * @return boolean result
+	 */
+	public boolean inBoundsCheck(Point point) {
+		return (point.x < world.worldBounds.x && point.y < world.worldBounds.y) && (point.x >= 0 && point.y >= 0);
+	}
+
+	/**
+	 * method to check if a cell the animal tries to move to is null
+	 * 
+	 * @param x vertical position
+	 * @param y horizontal position
+	 * @return boolean result
+	 */
+	public boolean isNullCheck(Point point) {
+		return World.cell[(int) point.x][(int) point.y].life == null;
+	}
+
+	/**
+	 * method to check if the contents of a cell moving into are edible
+	 * 
+	 * @param x vertical position
+	 * @param y horizontal position
+	 * @return boolean result
+	 */
+	public boolean isEdibleCheck(Point point) {
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param Point the target Pointor orchestrates a move of an Herbivore to a new
+	 *             cell
+	 */
+	void moveSpace(Point point) {
+		World.cell[point.x][point.y].life = World.cell[position.x][position.y].life;
+		World.cell[position.x][position.y].life = null;
+		position = point;
+		moved = true;
+	}
+
+	/**
+	 * destroys the animal by making it's own cell null and sets the cell's colour
+	 * to null's sienna
+	 */
+	public void die() {
+		World.cell[position.x][position.y].life = null;
+	}
+	
+	public void eat(Point pointFrom, Point pointTo) {
+		World.cell[pointTo.x][pointTo.y].life.die();
+		moveSpace(pointTo);
+	}
+
 }
