@@ -31,7 +31,7 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 	 */
 	public void live() {
 		neighborCheck(position);
-		if (viableMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && plantNeighbours >= MINIMUM_PLANT) {
+		if (viableMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && myNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
 			Point seedPoint = new Point(viableMoves.get(randomPositionInt));
 			World.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);

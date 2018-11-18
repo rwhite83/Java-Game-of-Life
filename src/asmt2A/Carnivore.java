@@ -28,7 +28,7 @@ public class Carnivore extends LifeForm implements OmnivoreEdible {
 	}
 	
 	public boolean giveBirthCheck() {
-		return (carnivoreNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS && carnivoreEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
+		return (myNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS && myEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
 	}
 
 	public void live() {

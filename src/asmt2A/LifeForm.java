@@ -27,14 +27,9 @@ public abstract class LifeForm {
 	protected int moveAttempts;
 	protected int lastFeed;
 
-	protected int plantNeighbours;
-	protected int herbivoreNeighbours;
-	protected int carnivoreNeighbours;
-	protected int omnivoreNeighbours;
+	protected int myNeighbours;
 
-	protected int herbivoreEdibleCount;
-	protected int omnivoreEdibleCount;
-	protected int carnivoreEdibleCount;
+	protected int myEdibleCount;
 
 	protected int nullNeighbours;
 
@@ -126,13 +121,8 @@ public abstract class LifeForm {
 	}
 
 	public void neighborCheck(Point tempPoint) {
-		herbivoreNeighbours = 0;
-		herbivoreEdibleCount = 0;
-		plantNeighbours = 0;
-		carnivoreNeighbours = 0;
-		omnivoreNeighbours = 0;
-		omnivoreEdibleCount = 0;
-		carnivoreEdibleCount = 0;
+		myNeighbours = 0;
+		myEdibleCount = 0;
 		nullNeighbours = 0;
 		viableMoves.clear();
 		for (int i = 0; i < moves.length; i++) {
@@ -141,23 +131,23 @@ public abstract class LifeForm {
 					&& currentPoint.y >= 0) {
 				if (World.cell[currentPoint.x][currentPoint.y].life instanceof HerbivoreEdible
 						&& World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
-					plantNeighbours++;
-					omnivoreEdibleCount++;
-					herbivoreEdibleCount++;
+					myNeighbours++;
+					myEdibleCount++;
+					myEdibleCount++;
 					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
 				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof CarnivoreEdible
 						&& World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
-					herbivoreNeighbours++;
-					omnivoreEdibleCount++;
-					carnivoreEdibleCount++;
+					myNeighbours++;
+					myEdibleCount++;
+					myEdibleCount++;
 					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
 				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof OmnivoreEdible) {
-					carnivoreNeighbours++;
-					omnivoreEdibleCount++;
+					myNeighbours++;
+					myEdibleCount++;
 					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
 				} else if (World.cell[currentPoint.x][currentPoint.y].life instanceof CarnivoreEdible) {
-					omnivoreNeighbours++;
-					carnivoreEdibleCount++;
+					myNeighbours++;
+					myEdibleCount++;
 					World.cell[currentPoint.x][currentPoint.y].life.viableMoves.add(currentPoint);
 				} else if (World.cell[currentPoint.x][currentPoint.y].life == null) {
 					nullNeighbours++;
