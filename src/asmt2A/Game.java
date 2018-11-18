@@ -14,8 +14,8 @@ public class Game extends Application {
 	/**
 	 * Global width and height parameters Global height parameter
 	 */
-	public static final int GLOBAL_HORI = 50;
-	public static final int GLOBAL_VERT = 50;
+	public static final int GLOBAL_HORI = 30;
+	public static final int GLOBAL_VERT = 30;
 
 	/**
 	 * creates a world
@@ -33,12 +33,12 @@ public class Game extends Application {
 	static GridPane root;
 
 	/**
-	 * instantiates a world with global parameters and 
-	 * a complementary 2d array of buttons
+	 * instantiates a world with global parameters and a complementary 2d array of
+	 * buttons
 	 */
 	public Game() {
 		world = new World(new Point(GLOBAL_HORI, GLOBAL_VERT));
-		buttons = new Button [world.worldBounds.x][world.worldBounds.y];
+		buttons = new Button[world.worldBounds.x][world.worldBounds.y];
 	}
 
 	/**
@@ -74,8 +74,8 @@ public class Game extends Application {
 	 * a function to re-colorize buttons after a turn is processed
 	 */
 	public void colorizeButtons() {
-		for (int x = 0; x < world.worldBounds.x; x++) 
-			for (int y = 0; y < world.worldBounds.y; y++) 
+		for (int x = 0; x < world.worldBounds.x; x++)
+			for (int y = 0; y < world.worldBounds.y; y++)
 				colorize(buttons[x][y], World.cell[x][y]);
 	}
 
