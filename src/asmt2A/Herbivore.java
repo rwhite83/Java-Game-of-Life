@@ -6,12 +6,6 @@ import java.awt.Point;
 
 public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdible {
 
-	public static final int MAX_UNFED = 5;
-	public static final int MAX_MOVE_ATTEMPTS = 8;
-	public static final int MINIMUM_MATE_NEIGHBOURS = 1;
-	public static final int MINIMUM_NULL_NEIGHBOURS = 2;
-	public static final int MINIMUM_FOOD_NEIGHBOURS = 2;
-
 	/**
 	 * standard constructor for Herbivore
 	 * 
@@ -21,43 +15,30 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 	Herbivore(World world, Point position) {
 		super(world, position, Colour.YELLOW);
 		lastFeed = 0;
+		minMateNeighbours = 1;
+		minNullNeighbours = 3;
+		minFoodNeighbours = 2;
+		maxUnfed = 5;
 	}
 
-	public boolean isEdible(Point Point) {
-		return (World.cell[Point.x][Point.y].life instanceof HerbivoreEdible);
-	}
-	
-	public boolean isBirthable() {
-		return (myNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS && myEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
+	/**
+	 * locally defined version of parent class abstract method
+	 */
+	public boolean isEdible(Point point) {
+		return (World.cell[point.x][point.y].life instanceof HerbivoreEdible);
 	}
 
-	public void live() {
-		if (lastFeed >= MAX_UNFED) {
-			die();
-			return;
-		}
-		moveAttempts = 0;
-		while (moved == false && moveAttempts < MAX_MOVE_ATTEMPTS) {
-			moveAttempts++;
-			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
-			Point temp = moves[randomPositionInt];
-			Point newHerbivorePoint = new Point(position.x + temp.x, position.y + temp.y);
-			Point oldHerbivorePoint = new Point(position.x, position.y);
-			if (isInBounds(newHerbivorePoint)) {
-				if (isNull(newHerbivorePoint)) {
-					moveSpace(newHerbivorePoint);
-					lastFeed++;
-				}
-				if (isEdible(newHerbivorePoint)) {
-					eat(position, newHerbivorePoint);
-					lastFeed = 0;
-					moved = true;
-				}
-				if (isBirthable()) {
-					World.cell[oldHerbivorePoint.x][oldHerbivorePoint.y].life = new Herbivore(world, oldHerbivorePoint);
-					World.cell[oldHerbivorePoint.x][oldHerbivorePoint.y].life.setMoved(true);
-				}
-			}
-		}
+	/**
+	 * locally defined version of parent class abstract method
+	 */
+	protected boolean isMyType(Point point) {
+		return (World.cell[point.x][point.y].life instanceof Herbivore);
+	}
+
+	/**
+	 * locally defined version of parent class abstract method
+	 */
+	protected void giveBirth(Point newSpawnPoint) {
+		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Herbivore(world, newSpawnPoint);
 	}
 }

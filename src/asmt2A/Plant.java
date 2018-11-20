@@ -29,13 +29,50 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 	 * based on the index position of plantNeighbors. puts a new plant in the chosen
 	 * cell, changes that cell's colour, and sets moved to true
 	 */
-	public void live() {
-		neighborCheck(position);
+	public void seed() {
+		neighbourCheck(position);
 		if (viableMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && myNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
 			Point seedPoint = new Point(viableMoves.get(randomPositionInt));
 			World.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);
 			World.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
 		}
+	}
+	
+	public void live() {
+		neighbourCheck(position);
+		seed();
+	}
+
+	/**
+	 * locally defined version of parent class abstract method
+	 * this function has no application to this empty so blank
+	 */
+	protected boolean hasFed() {
+		return false;
+	}
+
+	/**
+	 * locally defined version of parent class abstract method
+	 * this function has no application to this empty so blank
+	 */
+	protected boolean isEdible(Point Point) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * locally defined version of parent class abstract method
+	 */
+	protected boolean isMyType(Point point) {
+		return (World.cell[point.x][point.y].life instanceof Plant);
+	}
+
+	/**
+	 * locally defined version of parent class abstract method
+	 */
+	protected void giveBirth(Point newSpawnPoint) {
+		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Plant(world, position);
+		
 	}
 }
