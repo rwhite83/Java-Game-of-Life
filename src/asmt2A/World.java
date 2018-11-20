@@ -13,15 +13,15 @@ public class World {
 	public static final int HERBIVORE_RANDOM = 80;
 	public static final int CARNIVORE_RANDOM = 50;
 	public static final int OMNIVORE_RANDOM = 45;
-	
-	//////////////////testing///////////////////////////
+
+	////////////////// testing///////////////////////////
 	int plantCount = 0;
 	int herbivoreCount = 0;
 	int carnivoreCount = 0;
 	int omnivoreCount = 0;
-	int turnCounter= 0;
+	int turnCounter = 0;
 	////////////////////////////////////////////////////
-	
+
 	/**
 	 * 
 	 */
@@ -91,7 +91,7 @@ public class World {
 		int x, y, randomPositionInt;
 		for (x = 0; x < worldBounds.x; x++) {
 			for (y = 0; y < worldBounds.y; y++) {
-				Point newPoint = new Point(x,y);
+				Point newPoint = new Point(x, y);
 				randomPositionInt = RandomGenerator.nextNumber(99);
 				if (randomPositionInt >= HERBIVORE_RANDOM) {
 					cell[x][y] = new Cell(newPoint, new Herbivore(this, newPoint));
@@ -104,45 +104,51 @@ public class World {
 				} else {
 					cell[x][y] = new Cell(newPoint, null);
 				}
-				if(cell[x][y].life instanceof Plant)
+				if (cell[x][y].life instanceof Plant)
 					plantCount++;
-				if(cell[x][y].life instanceof Herbivore)
+				if (cell[x][y].life instanceof Herbivore)
 					herbivoreCount++;
-				if(cell[x][y].life instanceof Carnivore)
+				if (cell[x][y].life instanceof Carnivore)
 					carnivoreCount++;
-				if(cell[x][y].life instanceof Omnivore)
+				if (cell[x][y].life instanceof Omnivore)
 					omnivoreCount++;
 			}
 		}
-		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c " + carnivoreCount + " o: " + omnivoreCount);
+		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
+				+ carnivoreCount + " o: " + omnivoreCount);
 	}
-
-
 
 	/**
 	 * the function to initiate all life forms on the board to do a 'live' function
-	 * implements properly. also sets all life moved variable to false after a turn, a variable which is set
-	 * to true when a lifeform is created or moves to avoid duplicate moves/spawns
-	 * on a single turn. also recolorizes every cell after a turn
+	 * implements properly. also sets all life moved variable to false after a turn,
+	 * a variable which is set to true when a lifeform is created or moves to avoid
+	 * duplicate moves/spawns on a single turn. also recolorizes every cell after a
+	 * turn
 	 */
 	public void worldTurn() {
 		int x, y;
 		for (x = 0; x < worldBounds.x; x++) {
 			for (y = 0; y < worldBounds.y; y++) {
-				
-				//////////////////testing///////////////////////////
-				
-				if(cell[x][y].life instanceof Plant)
+
+				////////////////// testing///////////////////////////
+
+				if (cell[x][y].life instanceof Plant)
 					plantCount++;
-				if(cell[x][y].life instanceof Herbivore)
+				if (cell[x][y].life instanceof Herbivore) {
 					herbivoreCount++;
-				if(cell[x][y].life instanceof Carnivore)
+					//System.out.print("h: " + cell[x][y].life.lastFeed);
+				}
+				if (cell[x][y].life instanceof Carnivore) {
 					carnivoreCount++;
-				if(cell[x][y].life instanceof Omnivore)
+					//System.out.print("c: " + cell[x][y].life.lastFeed);
+				}
+				if (cell[x][y].life instanceof Omnivore) {
 					omnivoreCount++;
-				
+					//System.out.print("o: " + cell[x][y].life.lastFeed);
+				}
+
 				////////////////////////////////////////////////////
-				
+
 				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved())))
 					cell[x][y].life.live();
 			}
@@ -153,9 +159,10 @@ public class World {
 					cell[x][y].life.setMoved(false);
 			}
 		}
-		
-		//////////////////testing///////////////////////////
-		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c " + carnivoreCount + " o: " + omnivoreCount);
+
+		////////////////// testing///////////////////////////
+		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
+				+ carnivoreCount + " o: " + omnivoreCount);
 		plantCount = 0;
 		herbivoreCount = 0;
 		carnivoreCount = 0;

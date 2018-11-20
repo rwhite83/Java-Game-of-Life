@@ -5,6 +5,12 @@ import java.util.ArrayList;
 
 public abstract class LifeForm {
 
+	public static final int MAX_UNFED = 5;
+	public static final int MAX_MOVE_ATTEMPTS = 8;
+	public static final int MINIMUM_MATE_NEIGHBOURS = 1;
+	public static final int MINIMUM_NULL_NEIGHBOURS = 2;
+	public static final int MINIMUM_FOOD_NEIGHBOURS = 2;
+
 	/**
 	 * an array list of Pointor positions relative any given cell
 	 */
@@ -26,11 +32,8 @@ public abstract class LifeForm {
 
 	protected int moveAttempts;
 	protected int lastFeed;
-
 	protected int myNeighbours;
-
 	protected int myEdibleCount;
-
 	protected int nullNeighbours;
 
 	/**
@@ -44,10 +47,7 @@ public abstract class LifeForm {
 		this.colour = colour;
 	}
 
-	/**
-	 * various parent methods defined in children classes
-	 */
-	abstract void live();
+	protected abstract boolean hasFed();
 
 	public void setMoved(boolean moved) {
 		this.moved = moved;
@@ -59,6 +59,10 @@ public abstract class LifeForm {
 
 	public Colour getColour() {
 		return colour;
+	}
+
+	public void resetLastFed() {
+		lastFeed = 0;
 	}
 
 	/**
@@ -91,8 +95,14 @@ public abstract class LifeForm {
 	 * @param y horizontal position
 	 * @return boolean result
 	 */
-	public boolean isEdible(Point point) {
+
+	public boolean isEdible(Point Point) {
 		return false;
+	}
+
+	public boolean isBirthable() {
+		return (myNeighbours >= MINIMUM_MATE_NEIGHBOURS && nullNeighbours >= MINIMUM_NULL_NEIGHBOURS
+				&& myEdibleCount >= MINIMUM_FOOD_NEIGHBOURS);
 	}
 
 	/**
@@ -120,7 +130,7 @@ public abstract class LifeForm {
 		moveSpace(pointTo);
 	}
 
-	public void neighborCheck(Point tempPoint) {
+	public void neighbourCheck(Point tempPoint) {
 		myNeighbours = 0;
 		myEdibleCount = 0;
 		nullNeighbours = 0;
@@ -152,6 +162,58 @@ public abstract class LifeForm {
 				} else if (World.cell[currentPoint.x][currentPoint.y].life == null) {
 					nullNeighbours++;
 					viableMoves.add(currentPoint);
+				}
+			}
+		}
+	}
+
+	public void live() {
+		if (lastFeed >= MAX_UNFED) {
+			die();
+			return;
+		}
+		giveBirth(myNeighbours, nullNeighbours, myEdibleCount, World.cell[position.x][position.y].life);
+		neighbourCheck(position);
+		moveAttempts = 0;
+		while (moved == false && moveAttempts < MAX_MOVE_ATTEMPTS) {
+
+			moveAttempts++;
+			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
+			Point temp = moves[randomPositionInt];
+			Point newAnimalPoint = new Point(position.x + temp.x, position.y + temp.y);
+			if (isInBounds(newAnimalPoint)) {
+				if (isNull(newAnimalPoint)) {
+					moveSpace(newAnimalPoint);
+
+					lastFeed++;
+				}
+				if (isEdible(newAnimalPoint)) {
+					eat(position, newAnimalPoint);
+					lastFeed = 0;
+					moved = true;
+				}
+				if (isBirthable()) {
+					World.cell[oldAnimalPoint.x][oldAnimalPoint.y].life = new Herbivore(world, oldAnimalPoint);
+					World.cell[oldAnimalPoint.x][oldAnimalPoint.y].life.setMoved(true);
+				}
+
+			}
+		}
+	}
+
+	public void giveBirth(int numberOfMates, int emptyCells, int foodAvailable, LifeForm life) {
+		if (numberOfMates >= MINIMUM_MATE_NEIGHBOURS && emptyCells >= MINIMUM_NULL_NEIGHBOURS
+				&& foodAvailable >= MINIMUM_FOOD_NEIGHBOURS) {
+			viableMoves.clear();
+			neighbourCheck(position);
+			int randomPositionInt = RandomGenerator.nextNumber(moves.length);
+			Point temp = moves[randomPositionInt];
+			Point newAnimalPoint = new Point(position.x + temp.x, position.y + temp.y);
+			if (isInBounds(newAnimalPoint)) {
+				if (isNull(newAnimalPoint)) {
+					World.cell[newAnimalPoint.x][newAnimalPoint.y].life = life;
+					// World.cell[newAnimalPoint.x][newAnimalPoint.y].life.setMoved(true);
+					// World.cell[newAnimalPoint.x][newAnimalPoint.y].life.resetLastFed();
 				}
 			}
 		}
