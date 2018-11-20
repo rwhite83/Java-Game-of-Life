@@ -3,32 +3,23 @@ package asmt2A;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public abstract class LifeForm {
-
-	public static final int MAX_UNFED = 5;
-	public int minMateNeighbours;
-	public int minNullNeighbours;
-	public int minFoodNeighbours;
+public abstract class LifeForm implements Moves, LifeSigns {
 
 	/**
-	 * an array list of Pointor positions relative any given cell
+	 * declaration of constructor variables
 	 */
-	public static Point UpLeft = new Point(-1, 1);
-	public static Point Up = new Point(0, 1);
-	public static Point UpRight = new Point(1, 1);
-	public static Point Left = new Point(-1, 0);
-	public static Point Right = new Point(1, 0);
-	public static Point DownLeft = new Point(-1, -1);
-	public static Point Down = new Point(0, -1);
-	public static Point DownRight = new Point(1, -1);
-
-	Point[] moves = new Point[] { UpLeft, Up, UpRight, Left, Right, DownLeft, Down, DownRight };
-
 	protected Point position;
 	protected Colour colour;
-	protected boolean moved = false;
 	protected World world;
 
+	/**
+	 * setting moved initially to false for lifeforms created during a turn
+	 */
+	protected boolean moved = false;
+
+	/**
+	 * variables specific to individual life forms declared here in parent class
+	 */
 	protected int moveAttempts;
 	protected int lastFeed;
 	protected int myNeighbours;
@@ -36,34 +27,96 @@ public abstract class LifeForm {
 	protected int nullNeighbours;
 
 	/**
+	 * variables defined in children constructors for comparison operations
+	 */
+	public int minMateNeighbours;
+	public int minNullNeighbours;
+	public int minFoodNeighbours;
+	public int maxUnfed;
+
+	/**
 	 * an arraylist to check for fertile positions around a particular grid location
 	 */
 	ArrayList<Point> viableMoves = new ArrayList<Point>();
 
+	/**
+	 * the parent constructor all children use
+	 * 
+	 * @param world    refers to the world this lifeform belongs to
+	 * @param position refers the location on a world grid
+	 * @param colour   refers to the colour this particular life form should paint a
+	 *                 cell
+	 */
 	protected LifeForm(World world, Point position, Colour colour) {
 		this.world = world;
 		this.position = position;
 		this.colour = colour;
 	}
 
+	/**
+	 * an abstract method (therefore forced to be defined by children) to check if a
+	 * target cell is edible forced to be defined by children
+	 * 
+	 * @param point is the location on the grid
+	 * @return whether or not it is indeed edible by the given life form
+	 */
+	protected abstract boolean isEdible(Point point);
+
+	/**
+	 * an abstract method (therefore forced to be defined by children) to check if a
+	 * target cell is the same type as host. forced to be defined by children
+	 * 
+	 * @param point is the location on the grid
+	 * @return whether or not the target is indeed the same life type
+	 */
+	protected abstract boolean isMyType(Point point);
+
+	/**
+	 * an abstract method (therefore forced to be defined by children) which defines
+	 * in the child class the type of life to be born in a target sale
+	 * 
+	 * @param newSpawnPoint is the location on the grid to create a new life
+	 */
+	protected abstract void giveBirth(Point newSpawnPoint);
+
+	/**
+	 * checks if a lifeform has eaten sufficiently recently
+	 * 
+	 * @return whether the lastFeed count is less than the maximum allowed
+	 */
 	protected boolean hasFed() {
-		return (lastFeed < MAX_UNFED);
+		return (lastFeed < maxUnfed);
 	}
 
+	/**
+	 * when a new animal is created in a turn, this is used to set its moved value
+	 * to false so it doesn't move multiple times per turn
+	 * 
+	 * @param moved set the determinant of whether or not this animal has moved this
+	 *              turn
+	 */
 	public void setMoved(boolean moved) {
 		this.moved = moved;
 	}
 
+	/**
+	 * gets the variable which indicates whether or not a lifeform has moved or been
+	 * born this turn
+	 * 
+	 * @return the moved variable
+	 */
 	public boolean getMoved() {
 		return moved;
 	}
 
+	/**
+	 * used when colourizing the grid to check what colour a life form has
+	 * associated with it
+	 * 
+	 * @return the colour a life form should be painting its cell
+	 */
 	public Colour getColour() {
 		return colour;
-	}
-
-	public void resetLastFed() {
-		lastFeed = 0;
 	}
 
 	/**
@@ -97,12 +150,6 @@ public abstract class LifeForm {
 	 * @return boolean result
 	 */
 
-	protected abstract boolean isEdible(Point point);
-
-	protected abstract boolean isMyType(Point point);
-
-	protected abstract void giveBirth(Point newSpawnPoint);
-
 	public boolean canGiveBirth(Point point) {
 		return (myNeighbours >= minMateNeighbours && nullNeighbours >= minNullNeighbours
 				&& myEdibleCount >= minFoodNeighbours);
@@ -128,11 +175,23 @@ public abstract class LifeForm {
 		World.cell[position.x][position.y].life = null;
 	}
 
+	/**
+	 * kills the lifeform in a target cell and implements a move
+	 * 
+	 * @param pointFrom animal's original location
+	 * @param pointTo   animal's target location
+	 */
 	public void eat(Point pointFrom, Point pointTo) {
 		World.cell[pointTo.x][pointTo.y].life.die();
 		moveSpace(pointTo);
 	}
 
+	/**
+	 * goes through all positions around a passed in cell position and checks what
+	 * is around it
+	 * 
+	 * @param tempPoint the position to check around
+	 */
 	public void neighbourCheck(Point tempPoint) {
 		myNeighbours = 0;
 		myEdibleCount = 0;
@@ -140,22 +199,53 @@ public abstract class LifeForm {
 		viableMoves.clear();
 		for (int i = 0; i < moves.length; i++) {
 			Point possibleMove = new Point(position.x + moves[i].x, position.y + moves[i].y);
-			if (isInBounds(possibleMove)) {
-				if (isEdible(possibleMove)) {
-					myEdibleCount++;
-					viableMoves.add(possibleMove);
-				}
-				if (isMyType(possibleMove))
-					myNeighbours++;
-				else if (World.cell[possibleMove.x][possibleMove.y].life == null) {
-					nullNeighbours++;
-					viableMoves.add(possibleMove);
-				}
-			}
+			possibleMoveAdder(possibleMove);
 		}
-
 	}
 
+	/**
+	 * adds a position to a list of viable move positions if it satisfies
+	 * requirements
+	 * 
+	 * @param point the point to add if it meets the checks
+	 */
+	public void possibleMoveAdder(Point point) {
+		if (isInBounds(point)) {
+			if (isEdible(point)) {
+				myEdibleCount++;
+				viableMoves.add(point);
+			}
+			if (isMyType(point))
+				myNeighbours++;
+			else if (World.cell[point.x][point.y].life == null) {
+				nullNeighbours++;
+				viableMoves.add(point);
+			}
+		}
+	}
+
+	/**
+	 * implements a move, by either moving to a null space or eating the lifeform at
+	 * a target space and moving there
+	 * 
+	 * @param point the point to move/eat to
+	 */
+	public void move(Point point) {
+		if (isNull(point)) {
+			moveSpace(point);
+			lastFeed++;
+		}
+		if (isEdible(point)) {
+			eat(position, point);
+			lastFeed = 0;
+			moved = true;
+		}
+	}
+
+	/**
+	 * the general live function for life forms, implements a move and possibly a
+	 * spawn
+	 */
 	public void live() {
 		if (!hasFed()) {
 			die();
@@ -166,33 +256,27 @@ public abstract class LifeForm {
 				lastFeed++;
 				return;
 			}
-
-			// create position to move
 			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
 			Point moveTempPoint = viableMoves.get(randomPositionInt);
-
-			if (isNull(moveTempPoint)) {
-				moveSpace(moveTempPoint);
-				lastFeed++;
-			}
-			if (isEdible(moveTempPoint)) {
-				eat(position, moveTempPoint);
-				lastFeed = 0;
-				moved = true;
-			}
-
+			move(moveTempPoint);
 			viableMoves.remove(randomPositionInt);
+			spawn();
+		}
+	}
 
-			while (viableMoves.size() > 0) {
-				randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-				moveTempPoint = viableMoves.get(randomPositionInt);
-				if ((!isNull(moveTempPoint)) && (!canGiveBirth(moveTempPoint)))
-					viableMoves.remove(randomPositionInt);
-				else {
-					giveBirth(moveTempPoint);
-					World.cell[moveTempPoint.x][moveTempPoint.y].life.setMoved(true);
-					break;
-				}
+	/**
+	 * a spawn function which does checks and if those checks are met gives birth in a target cell
+	 */
+	public void spawn() {
+		while (viableMoves.size() > 0) {
+			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
+			Point moveTempPoint = viableMoves.get(randomPositionInt);
+			if ((!isNull(moveTempPoint)) && (!canGiveBirth(moveTempPoint)))
+				viableMoves.remove(randomPositionInt);
+			else {
+				giveBirth(moveTempPoint);
+				World.cell[moveTempPoint.x][moveTempPoint.y].life.setMoved(true);
+				break;
 			}
 		}
 	}

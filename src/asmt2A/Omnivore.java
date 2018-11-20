@@ -18,16 +18,26 @@ public class Omnivore extends LifeForm implements CarnivoreEdible {
 		minMateNeighbours = 1;
 		minNullNeighbours = 3;
 		minFoodNeighbours = 1;
+		maxUnfed = 5;
 	}
 	
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	public boolean isEdible(Point point) {
 		return (World.cell[point.x][point.y].life instanceof OmnivoreEdible);
 	}
 
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	protected boolean isMyType(Point point) {
 		return (World.cell[point.x][point.y].life instanceof Omnivore);
 	}
-	@Override
+
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	protected void giveBirth(Point newSpawnPoint) {
 		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Omnivore(world, newSpawnPoint);
 		

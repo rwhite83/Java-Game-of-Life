@@ -18,16 +18,26 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 		minMateNeighbours = 1;
 		minNullNeighbours = 3;
 		minFoodNeighbours = 2;
+		maxUnfed = 5;
 	}
 
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	public boolean isEdible(Point point) {
 		return (World.cell[point.x][point.y].life instanceof HerbivoreEdible);
 	}
 
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	protected boolean isMyType(Point point) {
 		return (World.cell[point.x][point.y].life instanceof Herbivore);
 	}
 
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	protected void giveBirth(Point newSpawnPoint) {
 		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Herbivore(world, newSpawnPoint);
 	}

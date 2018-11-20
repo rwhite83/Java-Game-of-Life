@@ -2,8 +2,9 @@ package asmt2A;
 
 import java.awt.Point;
 
-/** extends lifeForm and implements relevant methods */
-
+/** 
+ * extends lifeForm and implements relevant methods 
+ * */
 public class Carnivore extends LifeForm implements OmnivoreEdible {
 
 	/**
@@ -18,18 +19,26 @@ public class Carnivore extends LifeForm implements OmnivoreEdible {
 		minMateNeighbours = 1;
 		minNullNeighbours = 3;
 		minFoodNeighbours = 1;
+		maxUnfed = 5;
 	}
 	
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	public boolean isEdible(Point point) {
 		return (World.cell[point.x][point.y].life instanceof CarnivoreEdible);
 	}
 
-	@Override
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	protected boolean isMyType(Point point) {
 		return (World.cell[point.x][point.y].life instanceof Carnivore);
 	}
 
-	@Override
+	/**
+	 * locally defined version of parent class abstract method
+	 */
 	protected void giveBirth(Point newSpawnPoint) {
 		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Carnivore(world, newSpawnPoint);
 		
