@@ -42,4 +42,27 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 	public void live() {
 		spawn();
 	}
+
+	@Override
+	protected boolean hasFed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isEdible(Point Point) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected boolean isMyType(Point point) {
+		return (World.cell[point.x][point.y].life instanceof Plant);
+	}
+
+	@Override
+	protected void giveBirth(Point newSpawnPoint) {
+		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Plant(world, position);
+		
+	}
 }
