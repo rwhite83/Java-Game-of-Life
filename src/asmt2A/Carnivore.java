@@ -17,7 +17,7 @@ public class Carnivore extends LifeForm implements OmnivoreEdible {
 		super(world, position, Colour.RED);
 		lastFeed = 0;
 		minMateNeighbours = 1;
-		minNullNeighbours = 3;
+		minNullNeighbours = 10;
 		minFoodNeighbours = 1;
 		maxUnfed = 5;
 	}

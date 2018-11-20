@@ -271,7 +271,7 @@ public abstract class LifeForm implements Moves, LifeSigns {
 		while (viableMoves.size() > 0) {
 			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
 			Point moveTempPoint = viableMoves.get(randomPositionInt);
-			if ((!isNull(moveTempPoint)) && (!canGiveBirth(moveTempPoint)))
+			if ((!isNull(moveTempPoint)) || (!canGiveBirth(moveTempPoint)))
 				viableMoves.remove(randomPositionInt);
 			else {
 				giveBirth(moveTempPoint);
