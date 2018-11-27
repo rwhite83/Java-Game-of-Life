@@ -4,41 +4,43 @@ import java.awt.Point;
 
 /** extends lifeForm and implements relevant methods */
 
-public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdible {
+public class Omnivore extends LifeForm implements CarnivoreEdible {
 
 	/**
-	 * standard constructor for Herbivore
+	 * standard constructor for Omnivore
 	 * 
 	 * @param world is the world referred to
 	 * @param point refers to its position on the grid
 	 */
-	Herbivore(World world, Point position) {
-		super(world, position, Colour.YELLOW);
+	Omnivore(World world, Point position) {
+		super(world, position, Colour.BLUE);
 		lastFeed = 0;
 		minMateNeighbours = 1;
-		minNullNeighbours = 2;
-		minFoodNeighbours = 2;
+		minNullNeighbours = 3;
+		minFoodNeighbours = 1;
 		maxUnfed = 5;
 	}
-
+	
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	public boolean isEdible(Point point) {
-		return (World.cell[point.x][point.y].life instanceof HerbivoreEdible);
+		return (World.cell[point.x][point.y].life instanceof OmnivoreEdible);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected boolean isMyType(Point point) {
-		return (World.cell[point.x][point.y].life instanceof Herbivore);
+		return (World.cell[point.x][point.y].life instanceof Omnivore);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected void giveBirth(Point newSpawnPoint) {
-		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Herbivore(world, newSpawnPoint);
+		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Omnivore(world, newSpawnPoint);
+		
 	}
 }
+

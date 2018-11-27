@@ -2,6 +2,6 @@ package asmt2A;
 
 public enum Colour {
 	
-	GREEN, YELLOW, SIENNA;
+	GREEN, YELLOW, RED, BLUE, SIENNA;
 	
 }
