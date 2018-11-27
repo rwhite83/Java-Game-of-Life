@@ -1,9 +1,10 @@
 package asmt2A;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class LifeForm implements Moves, LifeSigns {
+public abstract class LifeForm implements Moves, LifeSigns, Serializable {
 
 	/**
 	 * declaration of constructor variables
@@ -37,7 +38,8 @@ public abstract class LifeForm implements Moves, LifeSigns {
 	/**
 	 * an arraylist to check for fertile positions around a particular grid location
 	 */
-	ArrayList<Point> viableMoves = new ArrayList<Point>();
+	ArrayList<Point> nullMoves = new ArrayList<Point>();
+	ArrayList<Point> eatMoves = new ArrayList<Point>();
 
 	/**
 	 * the parent constructor all children use
@@ -196,7 +198,8 @@ public abstract class LifeForm implements Moves, LifeSigns {
 		myNeighbours = 0;
 		myEdibleCount = 0;
 		nullNeighbours = 0;
-		viableMoves.clear();
+		nullMoves.clear();
+		eatMoves.clear();
 		for (int i = 0; i < moves.length; i++) {
 			Point possibleMove = new Point(position.x + moves[i].x, position.y + moves[i].y);
 			possibleMoveAdder(possibleMove);
@@ -213,13 +216,13 @@ public abstract class LifeForm implements Moves, LifeSigns {
 		if (isInBounds(point)) {
 			if (isEdible(point)) {
 				myEdibleCount++;
-				viableMoves.add(point);
+				eatMoves.add(point);
 			}
 			if (isMyType(point))
 				myNeighbours++;
 			else if (World.cell[point.x][point.y].life == null) {
 				nullNeighbours++;
-				viableMoves.add(point);
+				nullMoves.add(point);
 			}
 		}
 	}
@@ -231,15 +234,15 @@ public abstract class LifeForm implements Moves, LifeSigns {
 	 * @param point the point to move/eat to
 	 */
 	public void move(Point point) {
-		if (isNull(point)) {
-			moveSpace(point);
-			lastFeed++;
-		}
-		if (isEdible(point)) {
-			eat(position, point);
-			lastFeed = 0;
-			moved = true;
-		}
+		moveSpace(point);
+		lastFeed++;
+
+	}
+
+	public void eat(Point point) {
+		eat(position, point);
+		lastFeed = 0;
+		moved = true;
 	}
 
 	/**
@@ -252,27 +255,34 @@ public abstract class LifeForm implements Moves, LifeSigns {
 		} else {
 			neighbourCheck(position);
 			moveAttempts = 0;
-			if (viableMoves.size() == 0) {
-				lastFeed++;
-				return;
-			}
-			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-			Point moveTempPoint = viableMoves.get(randomPositionInt);
-			move(moveTempPoint);
-			viableMoves.remove(randomPositionInt);
-			spawn();
 		}
+		if (eatMoves.size() != 0) {
+			int randomPositionInt = RandomGenerator.nextNumber(eatMoves.size());
+			Point moveTempPoint = eatMoves.get(randomPositionInt);
+			eat(moveTempPoint);
+			eatMoves.remove(randomPositionInt);
+			spawn();
+		} else if (nullMoves.size() != 0) {
+			int randomPositionInt = RandomGenerator.nextNumber(nullMoves.size());
+			Point moveTempPoint = nullMoves.get(randomPositionInt);
+			move(moveTempPoint);
+			nullMoves.remove(randomPositionInt);
+			spawn();
+		} else
+			lastFeed++;
+			return;
 	}
 
 	/**
-	 * a spawn function which does checks and if those checks are met gives birth in a target cell
+	 * a spawn function which does checks and if those checks are met gives birth in
+	 * a target cell
 	 */
 	public void spawn() {
-		while (viableMoves.size() > 0) {
-			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-			Point moveTempPoint = viableMoves.get(randomPositionInt);
+		while (nullMoves.size() > 0) {
+			int randomPositionInt = RandomGenerator.nextNumber(nullMoves.size());
+			Point moveTempPoint = nullMoves.get(randomPositionInt);
 			if ((!isNull(moveTempPoint)) || (!canGiveBirth(moveTempPoint)))
-				viableMoves.remove(randomPositionInt);
+				nullMoves.remove(randomPositionInt);
 			else {
 				giveBirth(moveTempPoint);
 				World.cell[moveTempPoint.x][moveTempPoint.y].life.setMoved(true);

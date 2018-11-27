@@ -1,9 +1,10 @@
 package asmt2A;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
+public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible, Serializable {
 
 	/**
 	 * a particular plant's horizontal and vertical, a Pointor of those variables,
@@ -31,9 +32,9 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 	 */
 	public void seed() {
 		neighbourCheck(position);
-		if (viableMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && myNeighbours >= MINIMUM_PLANT) {
-			int randomPositionInt = RandomGenerator.nextNumber(viableMoves.size());
-			Point seedPoint = new Point(viableMoves.get(randomPositionInt));
+		if (nullMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && myNeighbours >= MINIMUM_PLANT) {
+			int randomPositionInt = RandomGenerator.nextNumber(nullMoves.size());
+			Point seedPoint = new Point(nullMoves.get(randomPositionInt));
 			World.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);
 			World.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
 		}
