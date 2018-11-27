@@ -1,8 +1,9 @@
 package asmt2A;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-public class World {
+public class World implements Serializable {
 
 	/**
 	 * worldHori global variable for height of game worldVert global variable for
@@ -15,11 +16,11 @@ public class World {
 	public static final int OMNIVORE_RANDOM = 45;
 
 	////////////////// testing///////////////////////////
-	int plantCount = 0;
+/*	int plantCount = 0;
 	int herbivoreCount = 0;
 	int carnivoreCount = 0;
 	int omnivoreCount = 0;
-	int turnCounter = 0;
+	int turnCounter = 0;*/
 	////////////////////////////////////////////////////
 
 	/**
@@ -49,7 +50,7 @@ public class World {
 	 * the colour to be associated with that kind of cell, a lifeform to associate
 	 * with it (passed in the constructor)
 	 */
-	public class Cell {
+	public class Cell implements Serializable {
 
 		/**
 		 * vertPosi and horiPosi are the dimensions of a particular cell within the 2D
@@ -104,18 +105,18 @@ public class World {
 				} else {
 					cell[x][y] = new Cell(newPoint, null);
 				}
-				if (cell[x][y].life instanceof Plant)
+/*				if (cell[x][y].life instanceof Plant)
 					plantCount++;
 				if (cell[x][y].life instanceof Herbivore)
 					herbivoreCount++;
 				if (cell[x][y].life instanceof Carnivore)
 					carnivoreCount++;
 				if (cell[x][y].life instanceof Omnivore)
-					omnivoreCount++;
+					omnivoreCount++;*/
 			}
 		}
-		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
-				+ carnivoreCount + " o: " + omnivoreCount);
+		//System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
+				//+ carnivoreCount + " o: " + omnivoreCount);
 	}
 
 	/**
@@ -132,7 +133,7 @@ public class World {
 
 				////////////////// testing///////////////////////////
 
-				if (cell[x][y].life instanceof Plant)
+/*				if (cell[x][y].life instanceof Plant)
 					plantCount++;
 				if (cell[x][y].life instanceof Herbivore) {
 					herbivoreCount++;
@@ -145,7 +146,7 @@ public class World {
 				if (cell[x][y].life instanceof Omnivore) {
 					omnivoreCount++;
 					//System.out.print("o: " + cell[x][y].life.lastFeed);
-				}
+				}*/
 
 				////////////////////////////////////////////////////
 
@@ -161,13 +162,13 @@ public class World {
 		}
 
 		////////////////// testing///////////////////////////
-		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
+/*		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
 				+ carnivoreCount + " o: " + omnivoreCount);
 		plantCount = 0;
 		herbivoreCount = 0;
 		carnivoreCount = 0;
 		omnivoreCount = 0;
-		turnCounter++;
+		turnCounter++;*/
 		////////////////////////////////////////////////////
 	}
 }
