@@ -57,7 +57,6 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible {
 	 * this function has no application to this empty so blank
 	 */
 	protected boolean isEdible(Point Point) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

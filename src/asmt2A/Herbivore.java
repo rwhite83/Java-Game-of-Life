@@ -16,7 +16,7 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 		super(world, position, Colour.YELLOW);
 		lastFeed = 0;
 		minMateNeighbours = 1;
-		minNullNeighbours = 3;
+		minNullNeighbours = 2;
 		minFoodNeighbours = 2;
 		maxUnfed = 5;
 	}
