@@ -4,7 +4,7 @@ A00975239
 Set B
 
 On or around:
-Decempber12, 2018
+Decempber 12, 2018
 
 The random number generator class provided by my instructor:
 Dennis Richards

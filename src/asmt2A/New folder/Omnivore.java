@@ -1,5 +1,3 @@
-package asmt2A;
-
 import java.awt.Point;
 
 /** extends lifeForm and implements relevant methods */

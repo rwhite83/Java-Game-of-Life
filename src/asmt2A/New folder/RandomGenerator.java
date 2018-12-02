@@ -1,5 +1,3 @@
-package asmt2A;
-
 public final class RandomGenerator
 {
     private static final int[] NUMBERS;
