@@ -12,6 +12,10 @@ public class Carnivore extends LifeForm implements OmnivoreEdible {
 	 * 
 	 * @param world is the world referred to
 	 * @param point refers to its position on the grid
+	 * @param lastFeed sets starvation incrementor to zero
+	 * @param minNullNeighbours = set this lifeform types minimum nulls to breed
+	 * @param minMateNeighbours = set this lifeform types minimum mates to breed
+	 * @param minFoodNeighbours = set this lifeform types minimum food to breed
 	 */
 	Carnivore(World world, Point position) {
 		super(world, position, Colour.RED);

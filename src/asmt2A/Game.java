@@ -1,7 +1,5 @@
 package asmt2A;
 
-import java.awt.Menu;
-import java.awt.MenuBar;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,12 +11,9 @@ import java.io.ObjectOutputStream;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.FillRule;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -42,14 +37,9 @@ public class Game extends Application {
 	private Button[][] buttons;
 
 	/**
-	 * declares a gridpane
+	 * declares a gridpane root, and a stage
 	 */
-
-	static GridPane deepRoot;
 	static GridPane root;
-
-	static GridPane gameState;
-
 	Stage stage;
 
 	/**
@@ -105,7 +95,11 @@ public class Game extends Application {
 	public void processButtonPress(ActionEvent lifeClick) {
 		turn();
 	}
-
+	
+	/**
+	 * processes a 'L' click which loads a game file 
+	 * @param loadClick
+	 */
 	public void processLPress(ActionEvent loadClick) {
 		FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Game File");
@@ -162,7 +156,6 @@ public class Game extends Application {
 		Button save = new Button("S");
 		save.setOnAction(this::processSPress);
 		root = new GridPane();
-		gameState = new GridPane();
 		root.add(load, GLOBAL_HORI / 2 + 1, 0);
 		root.add(save, GLOBAL_HORI / 2 - 2, 0);
 		int x, y;
