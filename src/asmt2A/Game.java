@@ -3,6 +3,7 @@ package asmt2A;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.Point;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,7 +18,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Cell;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.FillRule;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class Game extends Application {
@@ -41,11 +44,13 @@ public class Game extends Application {
 	/**
 	 * declares a gridpane
 	 */
-	
+
 	static GridPane deepRoot;
 	static GridPane root;
-	
+
 	static GridPane gameState;
+
+	Stage stage;
 
 	/**
 	 * instantiates a world with global parameters and a complementary 2d array of
@@ -98,43 +103,51 @@ public class Game extends Application {
 	 * the event handler for a button press to advance a turn
 	 */
 	public void processButtonPress(ActionEvent lifeClick) {
-		turn();		
-	}
-	
-	public void processLPress(ActionEvent loadClick) {
-		loadGame();
-		colorizeButtons();
-	}
-	
-	public void processSPress(ActionEvent saveClick) {
-		saveGame();
+		turn();
 	}
 
-	public void saveGame() {
+	public void processLPress(ActionEvent loadClick) {
+		FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Game File");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("BoardGame Files", "*.ser"));
+        File file = fileChooser.showOpenDialog(stage);
+        if(file != null) {
+            openGame(file);
+        }
+		colorizeButtons();
+	}
+
+	public void processSPress(ActionEvent saveClick) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save Game File");
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("BoardGame Files", "*.ser"));
+		File file = fileChooser.showSaveDialog(stage);
+		if (file != null) {
+			saveGame(file);
+		}
+	}
+
+	public void saveGame(File file) {
 		try {
-			FileOutputStream f = new FileOutputStream("Class1.ser");
-			ObjectOutput out = new ObjectOutputStream(f);
+			FileOutputStream fileOut = new FileOutputStream(file.getPath());
+			ObjectOutput out = new ObjectOutputStream(fileOut);
 			out.writeObject(world);
-			out.writeObject(World.cell);
 			out.flush();
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
-	
-	public void loadGame() {
+
+	public void openGame(File file) {
 		try {
-        FileInputStream f2 = new FileInputStream("Class1.ser");
-        ObjectInputStream in = new ObjectInputStream(f2);
-        world = (World) in.readObject();
-        World.cell = (World.Cell[][]) in.readObject();
-        in.close();
+			FileInputStream fileIn = new FileInputStream(file.getPath());
+			ObjectInputStream in = new ObjectInputStream(fileIn);
+			world = (World) in.readObject();
+			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -144,14 +157,14 @@ public class Game extends Application {
 	 */
 	public void start(Stage stage) {
 		stage.setTitle("Game of Life");
-		Button load = new Button("L");
+		Button load = new Button("O");
 		load.setOnAction(this::processLPress);
 		Button save = new Button("S");
 		save.setOnAction(this::processSPress);
 		root = new GridPane();
 		gameState = new GridPane();
-		root.add(load, GLOBAL_HORI/2 +1, 0);
-		root.add(save, GLOBAL_HORI/2 -2, 0);
+		root.add(load, GLOBAL_HORI / 2 + 1, 0);
+		root.add(save, GLOBAL_HORI / 2 - 2, 0);
 		int x, y;
 		for (x = 0; x < world.worldBounds.x; x++) {
 			for (y = 0; y < world.worldBounds.y; y++) {
@@ -163,7 +176,6 @@ public class Game extends Application {
 		}
 		root.setMinSize(1, 1);
 		Scene scene = new Scene(root);
-
 		stage.setScene(scene);
 
 		stage.show();
