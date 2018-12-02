@@ -1,15 +1,8 @@
-package asmt2A;
-
 import java.awt.Point;
 
 /** extends lifeForm and implements relevant methods */
 
 public class Omnivore extends LifeForm implements CarnivoreEdible {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8993032073101314255L;
 
 	/**
 	 * standard constructor for Omnivore
@@ -34,21 +27,21 @@ public class Omnivore extends LifeForm implements CarnivoreEdible {
 	 * locally defined version of parent class abstract method
 	 */
 	public boolean isEdible(Point point) {
-		return (world.cell[point.x][point.y].life instanceof OmnivoreEdible);
+		return (World.cell[point.x][point.y].life instanceof OmnivoreEdible);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected boolean isMyType(Point point) {
-		return (world.cell[point.x][point.y].life instanceof Omnivore);
+		return (World.cell[point.x][point.y].life instanceof Omnivore);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected void giveBirth(Point newSpawnPoint) {
-		world.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Omnivore(world, newSpawnPoint);
+		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Omnivore(world, newSpawnPoint);
 		
 	}
 }

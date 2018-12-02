@@ -1,14 +1,9 @@
-package asmt2A;
-
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6962607688490863396L;
 	/**
 	 * a particular plant's horizontal and vertical, a Pointor of those variables,
 	 * and a moved boolean to tag if a plant has been instantiated this turn. also
@@ -38,8 +33,8 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible, 
 		if (nullMoves.size() > 0 && nullNeighbours >= MINIMUM_NULL && myNeighbours >= MINIMUM_PLANT) {
 			int randomPositionInt = RandomGenerator.nextNumber(nullMoves.size());
 			Point seedPoint = new Point(nullMoves.get(randomPositionInt));
-			world.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);
-			world.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
+			World.cell[seedPoint.x][seedPoint.y].life = new Plant(world, seedPoint);
+			World.cell[seedPoint.x][seedPoint.y].life.setMoved(true);
 		}
 	}
 	
@@ -72,14 +67,14 @@ public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible, 
 	 * locally defined version of parent class abstract method
 	 */
 	protected boolean isMyType(Point point) {
-		return (world.cell[point.x][point.y].life instanceof Plant);
+		return (World.cell[point.x][point.y].life instanceof Plant);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected void giveBirth(Point newSpawnPoint) {
-		world.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Plant(world, position);
+		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Plant(world, position);
 		
 	}
 }

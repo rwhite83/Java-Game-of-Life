@@ -1,5 +1,3 @@
-package asmt2A;
-
 import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,7 +84,7 @@ public class Game extends Application {
 	public void colorizeButtons() {
 		for (int x = 0; x < world.worldBounds.x; x++)
 			for (int y = 0; y < world.worldBounds.y; y++)
-				colorize(buttons[x][y], world.cell[x][y]);
+				colorize(buttons[x][y], World.cell[x][y]);
 	}
 
 	/**
@@ -164,7 +162,7 @@ public class Game extends Application {
 	 */
 	public void start(Stage stage) {
 		stage.setTitle("Game of Life");
-		Button load = new Button("L");
+		Button load = new Button("O");
 		load.setOnAction(this::processLPress);
 		Button save = new Button("S");
 		save.setOnAction(this::processSPress);
@@ -176,7 +174,7 @@ public class Game extends Application {
 			for (y = 0; y < world.worldBounds.y; y++) {
 				buttons[x][y] = new Button("  ");
 				root.add(buttons[x][y], x, y + 1);
-				colorize(buttons[x][y], world.cell[x][y]);
+				colorize(buttons[x][y], World.cell[x][y]);
 				buttons[x][y].setOnAction(this::processButtonPress);
 			}
 		}

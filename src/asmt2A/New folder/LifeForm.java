@@ -1,15 +1,9 @@
-package asmt2A;
-
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public abstract class LifeForm implements Moves, Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2250474596054143565L;
 	/**
 	 * declaration of constructor variables
 	 */
@@ -145,7 +139,7 @@ public abstract class LifeForm implements Moves, Serializable {
 	 * @return boolean result
 	 */
 	public boolean isNull(Point point) {
-		return (world.cell[point.x][point.y].life == null);
+		return (World.cell[point.x][point.y].life == null);
 	}
 
 	/**
@@ -166,8 +160,8 @@ public abstract class LifeForm implements Moves, Serializable {
 	 *              cell
 	 */
 	void moveSpace(Point point) {
-		world.cell[point.x][point.y].life = world.cell[position.x][position.y].life;
-		world.cell[position.x][position.y].life = null;
+		World.cell[point.x][point.y].life = World.cell[position.x][position.y].life;
+		World.cell[position.x][position.y].life = null;
 		position = point;
 		moved = true;
 	}
@@ -177,7 +171,7 @@ public abstract class LifeForm implements Moves, Serializable {
 	 * to null's sienna
 	 */
 	public void die() {
-		world.cell[position.x][position.y].life = null;
+		World.cell[position.x][position.y].life = null;
 	}
 
 	/**
@@ -187,7 +181,7 @@ public abstract class LifeForm implements Moves, Serializable {
 	 * @param pointTo   animal's target location
 	 */
 	public void eat(Point pointFrom, Point pointTo) {
-		world.cell[pointTo.x][pointTo.y].life.die();
+		World.cell[pointTo.x][pointTo.y].life.die();
 		moveSpace(pointTo);
 	}
 
@@ -223,7 +217,7 @@ public abstract class LifeForm implements Moves, Serializable {
 			}
 			if (isMyType(point))
 				myNeighbours++;
-			else if (world.cell[point.x][point.y].life == null) {
+			else if (World.cell[point.x][point.y].life == null) {
 				nullNeighbours++;
 				nullMoves.add(point);
 			}
@@ -288,7 +282,7 @@ public abstract class LifeForm implements Moves, Serializable {
 				nullMoves.remove(randomPositionInt);
 			else {
 				giveBirth(moveTempPoint);
-				world.cell[moveTempPoint.x][moveTempPoint.y].life.setMoved(true);
+				World.cell[moveTempPoint.x][moveTempPoint.y].life.setMoved(true);
 				break;
 			}
 		}

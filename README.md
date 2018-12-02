@@ -29,12 +29,13 @@ Game function instantiates a new world, and handles my GUI, including the
 start function which populates a gridpane with buttons defined in world, 
 the launchGUI function which launches the GUI after instantiating a 2D button 
 array, and handles button presses, which call the turn function, which calls
-world turn on the newly created world.
+world turn on the newly created world.  Here also button presses to save and 
+load a game are handled.
 
 In the world class, a 2D array of cells is declared, then in the world
 constructor, a createWorld function is called, which instantiates the 2D array,
-and according to the rules presented by Dennis populates the array with herbivores
-and plants (or null), calling their constructors sequentially in cells.
+and according to the rules presented by Dennis populates the array with herbivores, 
+omnivores, carnivores, and plants (or null), calling their constructors sequentially in cells.
 
 This class also has a turn function for when the buttons are clicked.  It calls
 a live function on all cells which contain a lifeform, then sets a moved variable
@@ -48,31 +49,25 @@ The world class also has an inner cell class, with a constructor which passes in
 horizontal and vertical coordinates, as well as a lifeform.
 
 On turn in the world class, it calls a live function on the lifeforms.  This is
-referencing the lifeform class, which has empty methods defined by herbivore and 
-plant classes which extend it. Also in lifeform class is an array of vectors to
-indicate all the positions around any given cell, which both children can use
-in their processing their operations.  Also included are other primary methods
-defined by plants and herbivores.
+referencing the lifeform class, which has template functions used by all life forms,
+with more particular functions specified for the more different plants.
+Also in lifeform class there are references to a moves interface which contains positions
+relative to the lifeform in question and indicate all the positions around any given cell, 
+which all children can use in their processing their operations.  Also included are other 
+primary methods used by plants and herbivores.
 
-In the herbivore class, I have a constructor which passes in location variables and sets
-a lastfeed variable to zero.  When the live function is called on lifeform, the herbivore
-responds by calling a move function. The animal picks a spot at random around it.  It then calls
-three check functions, in bounds, is edible, and is null.  If it is in bounds, and is
-either edible or null, the animal moves there.  If it moves to a null, lastfeed is
-incremented, if it is an edible, lastfeed is reset to zero.  If lastfeed reaches
-5, on it's next turn it calls a die function which sets its cell's lifeform variable
-to null.  this all happens in a while loop which uses the same moved variable as
-mentioned earlier, to keep attempting to move until a spot to move can be found.  
-There is also a variable called moveAttempts which increments until it reaches 8, the
-maximum possible positions it could move to, to account for scenerios in which it cannot
-move anywhere.
+In the herbivore, omnivore, and carnivore classes, I have a constructor which passes in 
+location variables and sets values for a series of variables particular to that life form.
+When the live function is called on lifeform, all animals automatically perform the life
+form's functions, with animal specific abstract functions defined by the class children.
+The animal picks a spot at random around it.  It then performs a variety of checks, 
+chooses a food to move to if it is available and resets last feed variable to zero, 
+if not moves to a null if it is available.  If certain conditions are met, it will breed and 
+put a new life form in an adjacent cell.  If lastfeed reaches 5, on it's next turn it calls 
+a die function which sets its cell's lifeform variable to null.  This all happens in a while 
+loop which uses the same moved variable as mentioned earlier, to keep attempting to 
+move until a spot to move can be found. 
 
-My plant class has a constructor which takes in location variables and passes them in
-in addition to creating a vector for this particular plant.  The first is neighbour check, 
-which takes in a vector and first resets nullNeighbours and plantNeighbours to zero and clears
-a fertile arraylist of vector positions.  It then checks every position around the passed in 
-vector.  If the position contains a plant, in increments plantNeighbours, if it is empty(null) 
-it increments nullNeighbours and adds the vector to the fertile arraylist. If fertile arraylist 
-is greater than zero, and nullNeighbours is greater than or equal to three, one of it's elements 
-is randomly selected.  neighbourCheck is then called on this cell.  If it has exactly four plants
-around it, a new plant is created in the cell.
+My plant class overrides the live function and in it calls a seed function, which does a
+neighbour check, and if certain conditions are met, places a new plant in an adjacent null
+cell chosen at random.

@@ -7,6 +7,11 @@ import java.awt.Point;
 public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdible {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1861777997828847708L;
+
+	/**
 	 * standard constructor for Herbivore
 	 * 
 	 * @param world is the world referred to
@@ -29,20 +34,20 @@ public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdib
 	 * locally defined version of parent class abstract method
 	 */
 	public boolean isEdible(Point point) {
-		return (World.cell[point.x][point.y].life instanceof HerbivoreEdible);
+		return (world.cell[point.x][point.y].life instanceof HerbivoreEdible);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected boolean isMyType(Point point) {
-		return (World.cell[point.x][point.y].life instanceof Herbivore);
+		return (world.cell[point.x][point.y].life instanceof Herbivore);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected void giveBirth(Point newSpawnPoint) {
-		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Herbivore(world, newSpawnPoint);
+		world.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Herbivore(world, newSpawnPoint);
 	}
 }

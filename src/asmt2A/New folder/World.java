@@ -1,14 +1,8 @@
-package asmt2A;
-
 import java.awt.Point;
 import java.io.Serializable;
 
 public class World implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5376199635798624293L;
 	/**
 	 * worldHori global variable for height of game worldVert global variable for
 	 * width of game cell declares a 2D array of cells
@@ -19,6 +13,14 @@ public class World implements Serializable {
 	public static final int CARNIVORE_RANDOM = 50;
 	public static final int OMNIVORE_RANDOM = 45;
 
+	////////////////// testing///////////////////////////
+/*	int plantCount = 0;
+	int herbivoreCount = 0;
+	int carnivoreCount = 0;
+	int omnivoreCount = 0;
+	int turnCounter = 0;*/
+	////////////////////////////////////////////////////
+
 	/**
 	 * 
 	 */
@@ -27,7 +29,7 @@ public class World implements Serializable {
 	/**
 	 * declares a 2D array or cells
 	 */
-	Cell[][] cell;
+	static Cell[][] cell;
 
 	/**
 	 * world constructor
@@ -37,7 +39,7 @@ public class World implements Serializable {
 	 */
 	public World(Point worldBounds) {
 		this.worldBounds = worldBounds;
-		cell = new Cell[worldBounds.x][worldBounds.y];
+		World.cell = new Cell[worldBounds.x][worldBounds.y];
 		populateWorld();
 	}
 
@@ -48,10 +50,6 @@ public class World implements Serializable {
 	 */
 	public class Cell implements Serializable {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8695890227638775857L;
 		/**
 		 * vertPosi and horiPosi are the dimensions of a particular cell within the 2D
 		 * cell array
@@ -105,8 +103,18 @@ public class World implements Serializable {
 				} else {
 					cell[x][y] = new Cell(newPoint, null);
 				}
+/*				if (cell[x][y].life instanceof Plant)
+					plantCount++;
+				if (cell[x][y].life instanceof Herbivore)
+					herbivoreCount++;
+				if (cell[x][y].life instanceof Carnivore)
+					carnivoreCount++;
+				if (cell[x][y].life instanceof Omnivore)
+					omnivoreCount++;*/
 			}
 		}
+		//System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
+				//+ carnivoreCount + " o: " + omnivoreCount);
 	}
 
 	/**
@@ -120,6 +128,26 @@ public class World implements Serializable {
 		int x, y;
 		for (x = 0; x < worldBounds.x; x++) {
 			for (y = 0; y < worldBounds.y; y++) {
+
+				////////////////// testing///////////////////////////
+
+/*				if (cell[x][y].life instanceof Plant)
+					plantCount++;
+				if (cell[x][y].life instanceof Herbivore) {
+					herbivoreCount++;
+					//System.out.print("h: " + cell[x][y].life.lastFeed);
+				}
+				if (cell[x][y].life instanceof Carnivore) {
+					carnivoreCount++;
+					//System.out.print("c: " + cell[x][y].life.lastFeed);
+				}
+				if (cell[x][y].life instanceof Omnivore) {
+					omnivoreCount++;
+					//System.out.print("o: " + cell[x][y].life.lastFeed);
+				}*/
+
+				////////////////////////////////////////////////////
+
 				if ((cell[x][y].life != null) && (!(cell[x][y].life.getMoved())))
 					cell[x][y].life.live();
 			}
@@ -130,5 +158,15 @@ public class World implements Serializable {
 					cell[x][y].life.setMoved(false);
 			}
 		}
+
+		////////////////// testing///////////////////////////
+/*		System.out.println("turn: " + turnCounter + " p: " + plantCount + " h: " + herbivoreCount + " :c "
+				+ carnivoreCount + " o: " + omnivoreCount);
+		plantCount = 0;
+		herbivoreCount = 0;
+		carnivoreCount = 0;
+		omnivoreCount = 0;
+		turnCounter++;*/
+		////////////////////////////////////////////////////
 	}
 }
