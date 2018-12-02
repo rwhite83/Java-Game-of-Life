@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class Plant extends LifeForm implements HerbivoreEdible, OmnivoreEdible, Serializable {
 
 	/**
-	 * 
+	 * facilitates versioning of serialized data
 	 */
 	private static final long serialVersionUID = 6962607688490863396L;
 	/**

@@ -6,7 +6,7 @@ import java.io.Serializable;
 public class World implements Serializable {
 
 	/**
-	 * 
+	 * facilitates versioning of serialized data
 	 */
 	private static final long serialVersionUID = -5376199635798624293L;
 	/**

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public abstract class LifeForm implements Moves, Serializable {
 
 	/**
-	 * 
+	 * facilitates versioning of serialized data
 	 */
 	private static final long serialVersionUID = 2250474596054143565L;
 	/**
@@ -15,7 +15,7 @@ public abstract class LifeForm implements Moves, Serializable {
 	 */
 	protected Point position;
 	protected Colour colour;
-	protected World world;
+	protected World world; 
 
 	/**
 	 * setting moved initially to false for lifeforms created during a turn

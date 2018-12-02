@@ -8,7 +8,7 @@ import java.awt.Point;
 public class Carnivore extends LifeForm implements OmnivoreEdible {
 
 	/**
-	 * 
+	 * facilitates versioning of serialized data
 	 */
 	private static final long serialVersionUID = -8405136338424047606L;
 
@@ -26,7 +26,7 @@ public class Carnivore extends LifeForm implements OmnivoreEdible {
 		super(world, position, Colour.RED);
 		lastFeed = 0;
 		minMateNeighbours = 1;
-		minNullNeighbours = 2;
+		minNullNeighbours = 3;
 		minFoodNeighbours = 2;
 		maxUnfed = 5;
 	}

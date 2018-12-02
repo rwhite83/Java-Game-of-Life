@@ -7,7 +7,7 @@ import java.awt.Point;
 public class Herbivore extends LifeForm implements CarnivoreEdible, OmnivoreEdible {
 
 	/**
-	 * 
+	 * facilitates versioning of serialized data
 	 */
 	private static final long serialVersionUID = 1861777997828847708L;
 

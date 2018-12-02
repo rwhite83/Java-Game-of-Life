@@ -5,6 +5,11 @@ import java.awt.Point;
 public class Omnivore extends LifeForm implements CarnivoreEdible {
 
 	/**
+	 * facilitates versioning of serialized data
+	 */
+	private static final long serialVersionUID = 8993032073101314255L;
+
+	/**
 	 * standard constructor for Omnivore
 	 * 
 	 * @param world is the world referred to
@@ -27,21 +32,21 @@ public class Omnivore extends LifeForm implements CarnivoreEdible {
 	 * locally defined version of parent class abstract method
 	 */
 	public boolean isEdible(Point point) {
-		return (World.cell[point.x][point.y].life instanceof OmnivoreEdible);
+		return (world.cell[point.x][point.y].life instanceof OmnivoreEdible);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected boolean isMyType(Point point) {
-		return (World.cell[point.x][point.y].life instanceof Omnivore);
+		return (world.cell[point.x][point.y].life instanceof Omnivore);
 	}
 
 	/**
 	 * locally defined version of parent class abstract method
 	 */
 	protected void giveBirth(Point newSpawnPoint) {
-		World.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Omnivore(world, newSpawnPoint);
+		world.cell[newSpawnPoint.x][newSpawnPoint.y].life = new Omnivore(world, newSpawnPoint);
 		
 	}
 }
