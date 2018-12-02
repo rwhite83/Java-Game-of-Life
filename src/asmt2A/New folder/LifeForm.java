@@ -1,5 +1,3 @@
-package asmt2A;
-
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ public abstract class LifeForm implements Moves, Serializable {
 	 */
 	protected Point position;
 	protected Colour colour;
-	protected World world; 
+	protected World world;
 
 	/**
 	 * setting moved initially to false for lifeforms created during a turn
